@@ -1,7 +1,7 @@
 {
   "name": "gift-crowdfunding",
   "version": "0.0.1",
-  "description": "Coose gifts. Give gifts",
+  "description": "Choose gifts. Give gifts",
   "author": "arty gvozdenkov",
   "private": true,
   "license": "MIT",
@@ -26,6 +26,8 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "dotenv": "^16.4.5",
+    "joi": "^17.12.2",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },
