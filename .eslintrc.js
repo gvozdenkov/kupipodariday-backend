@@ -1,12 +1,9 @@
 module.exports = {
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaVersion: 'latest',
-    project: 'tsconfig.json',
-    tsconfigRootDir: __dirname,
-    sourceType: 'module',
+  env: {
+    es2021: true,
+    node: true,
+    jest: true,
   },
-  plugins: ['@typescript-eslint', 'prettier'],
   extends: [
     'airbnb-base',
     'airbnb-typescript/base',
@@ -14,13 +11,14 @@ module.exports = {
     'plugin:import/typescript',
     'prettier',
   ],
-  root: true,
-  env: {
-    es2021: true,
-    node: true,
-    jest: true,
+  ignorePatterns: ['build', '.eslintrc.js'],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: './tsconfig.json',
   },
-  ignorePatterns: ['.eslintrc.js'],
+  plugins: ['@typescript-eslint', 'prettier'],
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
@@ -48,6 +46,7 @@ module.exports = {
     'no-var': 0,
     'block-scoped-var': 'off',
     'vars-on-top': 0,
+    'class-methods-use-this': ['off'],
     '@typescript-eslint/no-unused-vars': ['error'],
     '@typescript-eslint/no-shadow': 0,
     'no-return-await': 'off',
