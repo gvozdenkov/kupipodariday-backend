@@ -2,7 +2,7 @@
   <a href="#" target="blank"><img src="README_static/logo.svg" width="200" alt="Gift crowdfunding logo" /></a>
 </p>
 
-<p align="center">A gift crowdfunding service</p>
+<p align="center">A gift crowdfunding service. Choose gifts. Give gifts</p>
 
 ## Description
 
