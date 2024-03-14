@@ -95,5 +95,7 @@ common/autoinstallers/*/.npmrc
 deploy/
 GRAPH.md
 pnpm-lock.yaml
+/pgdata/
+docs/
 
 *.d.ts
