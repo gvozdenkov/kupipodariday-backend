@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: gift-crowdfunding-postgres
+    image: postgres:16
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
+  app:
+    container_name: gift-crowdfunding-app
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3000:3000
+    volumes:
+      - ./src:/app/src
+    environment:
+      # map env vars from .env file
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - BASE_PATH=${BASE_PATH}
+
+  pgadmin:
+    container_name: gift-crowdfunding-pgadmin4
+    image: dpage/pgadmin4
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - 5050:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=pgadmin4
