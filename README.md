@@ -6,27 +6,43 @@
 
 ## Description
 
-You choose your dream. You are making someone else's dream come true. People make your dream come
-true. Repeat.
+This is wishlist service.
 
-## Installation
+<p align="center">
+  Our slogan:
+</p>
+
+---
+
+<p align="center">
+  You choose your dream. You are making someone else's dream come true. People make your dream come true. Repeat.
+</p>
+
+## Local Development with Docker
 
 ```bash
-$ yarn
+# run service in detached mode (see logs in terminal):
+	docker compose -f compose.dev.yaml up -d --build
+  # or with Makefile
+  make run-dev
+
+# run service in containers:
+	docker compose -f compose.dev.yaml up --build
+  # or with Makefile
+  make run-dev-d
+
+# stop service in dev mode:
+	docker compose -f compose.dev.yaml dow
+  # or with Makefile
+  make stop-dev
+
 ```
 
-## Running the app
+Docker compose run 3 containers:
 
-```bash
-# development
-$ yarn start
-
-# watch mode
-$ yarn start:dev
-
-# production mode
-$ yarn start:prod
-```
+- Postgres db
+- pgadmin
+- App
 
 ## Test
 
