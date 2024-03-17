@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule } from '@nestjs/swagger';
 import YAML from 'js-yaml';
 import fs from 'fs';
@@ -12,6 +13,8 @@ var bootstrap = () => {
     var openApiSpec = YAML.load(fs.readFileSync('docs/openapi.yaml', 'utf-8'));
 
     SwaggerModule.setup(`${BASE_PATH}/v1/docs`, app, openApiSpec);
+
+    app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
     // eslint-disable-next-line no-console
     app.listen(PORT, () => console.log(`Server running on port ${PORT}, http://localhost:${PORT}`));
