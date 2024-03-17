@@ -38,11 +38,15 @@ This is wishlist service.
 
 ```
 
-Docker compose run 3 containers:
+### Docker Compose comments
 
-- Postgres db
-- pgadmin
-- App
+#### `compose.dev.yaml`
+
+1. `db` service uses volume `./pgdata:/var/lib/postgresql/data`
+
+I had a problem with `lintstaged`. `prettier:write` don't have access permissions for dev folder
+`pgdata` even if I plase it in `.prettierignore`. I solved this problem with
+`sudo chmod -R a+rwx ./pgdata/`
 
 ## Test
 
