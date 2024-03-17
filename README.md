@@ -1,40 +1,31 @@
 <p align="center">
-  <a href="#" target="blank"><img src="README_static/logo.svg" width="200" alt="Gift crowdfunding logo" /></a>
+  <a href="#" target="blank"><img src="README_static/logo.svg" width="200" alt="wish magic logo" /></a>
 </p>
 
-<p align="center">A gift crowdfunding service. Choose gifts. Give gifts</p>
+<p align="center">A wishlist service. Share your dreams with your friends</p>
 
 ## Description
 
-This is wishlist service.
-
-<p align="center">
-  Our slogan:
-</p>
-
----
-
-<p align="center">
-  You choose your dream. You are making someone else's dream come true. People make your dream come true. Repeat.
-</p>
+Each registered user can tell about the gift he would like to receive. And also chip in for a gift
+for another user.
 
 ## Local Development with Docker
 
 ```bash
 # run service in detached mode (see logs in terminal):
-	docker compose -f compose.dev.yaml up -d --build
-  # or with Makefile
-  make run-dev
+docker compose -f compose.dev.yaml up -d --build
+# or with Makefile
+make run-dev
 
 # run service in containers:
-	docker compose -f compose.dev.yaml up --build
-  # or with Makefile
-  make run-dev-d
+docker compose -f compose.dev.yaml up --build
+# or with Makefile
+make run-dev-d
 
 # stop service in dev mode:
-	docker compose -f compose.dev.yaml dow
-  # or with Makefile
-  make stop-dev
+docker compose -f compose.dev.yaml down
+# or with Makefile
+make stop-dev
 
 ```
 
