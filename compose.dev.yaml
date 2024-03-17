@@ -3,14 +3,17 @@ version: '3.9'
 services:
   db:
     container_name: gift-crowdfunding-postgres
-    image: postgres:16
+    image: postgres:14.3-alpine
     restart: always
     ports:
       - 5432:5432
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGDATA=/var/lib/postgresql/data/pgdata
 
   app:
     container_name: gift-crowdfunding-app
@@ -29,14 +32,5 @@ services:
       - PORT=${PORT}
       - BASE_PATH=${BASE_PATH}
 
-  pgadmin:
-    container_name: gift-crowdfunding-pgadmin4
-    image: dpage/pgadmin4
-    depends_on:
-      - db
-    restart: always
-    ports:
-      - 5050:80
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=pgadmin4
+volumes:
+  pgdata:
