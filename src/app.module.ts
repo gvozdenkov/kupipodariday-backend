@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { config } from '#config';
 import { User, UsersService, UsersController } from '#users';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+
+var { host, port, database, username, password } = config.db;
 
 @Module({
   controllers: [AppController, UsersController],
@@ -11,13 +14,13 @@ import { UsersModule } from './users/users.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'db',
-      port: 5432,
-      username: 'admin',
-      password: 'root',
-      database: 'postgres',
+      host,
+      port,
+      username,
+      password,
+      database,
       entities: [User],
-      synchronize: true,
+      synchronize: false,
     }),
     TypeOrmModule.forFeature([User]),
     UsersModule,

@@ -1,8 +1,9 @@
-run-dev:
-	docker compose -f compose.dev.yaml up -d --build
+composeDev = compose.dev.yaml
 
-run-dev-d:
-	docker compose -f compose.dev.yaml up --build
+run-dev:
+	docker compose -f $(composeDev) up --build
 
 stop-dev:
-	docker compose -f compose.dev.yaml down
+	docker compose -f $(composeDev) down -v
+
+restart-dev: stop-dev run-dev
