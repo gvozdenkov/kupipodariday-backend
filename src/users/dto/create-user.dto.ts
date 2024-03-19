@@ -1,4 +1,5 @@
 import { IsString, IsEmail, IsUrl, Length, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
   @IsString()
@@ -15,6 +16,7 @@ export class CreateUserDto {
   avatar: string = `https://i.pravatar.cc/200/?img=${Math.floor(Math.random() * 70) + 1}`;
 
   @IsEmail()
+  @Transform((param) => param.value.toLowerCase())
   email: string;
 
   @Length(4, 64, { message: `'password' shoud be minimum 4 and maximum 64 charecters` })
