@@ -41,7 +41,7 @@ type Config = {
   };
 };
 
-export var config: Config = {
+export var configuration = (): Config => ({
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   basePath: envVars.BASE_PATH,
@@ -52,4 +52,4 @@ export var config: Config = {
     password: envVars.POSTGRES_PASSWORD,
     database: envVars.POSTGRES_DB,
   },
-};
+});
