@@ -1,10 +1,9 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
-import { config } from '#config';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 
-var { basePath: BASE_PATH } = config;
+var BASE_PATH = '/api';
 var mainControllerPath = 'users';
 
 @Controller(`${BASE_PATH}/v1`)
