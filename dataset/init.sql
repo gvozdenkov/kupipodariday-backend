@@ -5,8 +5,8 @@ CREATE TABLE user_account (
     avatar VARCHAR,
     email VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
-    cretedAt TIMESTAMP NOT NULL DEFAULT current_timestamp,
-    updatedAt TIMESTAMP NOT NULL DEFAULT current_timestamp
+    createdat TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    updatedat TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 
 COPY user_account (username, about, avatar, email, password)

@@ -27,8 +27,8 @@ export class User {
   password: string;
 
   @CreateDateColumn({ select: false })
-  createdAt: Date;
+  createdat: Date;
 
   @UpdateDateColumn({ select: false })
-  updatedAt: Date;
+  updatedat: Date;
 }
