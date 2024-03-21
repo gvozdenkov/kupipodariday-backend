@@ -1,3 +1,5 @@
 username,about,avatar,email,password
-"Test User One","about test user 1","https://i.pravatar.cc/200/?img=1","test1@mail.com","1234"
-"Test User Two","about test user 2","https://i.pravatar.cc/200/?img=2","test2@mail.com","1234"
+"Test User","I am test user","https://i.pravatar.cc/200/?img=3","testuser@mail.com","1234"
+"Friend One","about friend one","https://i.pravatar.cc/200/?img=12","friend1@mail.com","1234"
+"Friend Two",,"https://i.pravatar.cc/200/?img=42","friend2@mail.com","1234"
+"Friend Three","I am super friend of Test User","https://i.pravatar.cc/200/?img=18","friend3@mail.com","1234"
