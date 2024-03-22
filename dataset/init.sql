@@ -9,7 +9,7 @@ CREATE TABLE user_account (
     updatedat TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 
-COPY user_account (username, about, avatar, email, password)
+COPY user_account (id, username, about, avatar, email, password)
 FROM '/docker-entrypoint-initdb.d/user.csv'
 DELIMITER ','
 CSV HEADER;
