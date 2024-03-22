@@ -13,12 +13,12 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('varchar', { length: 64 })
   @IsString()
   @Length(2, 64, { message: `'username' should have minium 2 and maximum 64 characters` })
   username: string;
 
-  @Column()
+  @Column('varchar', { length: 200, nullable: true })
   @IsOptional()
   @IsString()
   @Length(0, 200, { message: `'about' should have maximum 200 characters` })
@@ -34,7 +34,7 @@ export class User {
   @Transform((param) => param.value.toLowerCase())
   email: string;
 
-  @Column({ select: false })
+  @Column('varchar', { length: 64, select: false })
   @Length(4, 64, { message: `'password' shoud be minimum 4 and maximum 64 charecters` })
   password: string;
 
