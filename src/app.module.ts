@@ -5,6 +5,11 @@ import { Wishlist } from '#wishlist/entities/wishlist.entity';
 import { WishlistModule } from '#wishlist/wishlist.module';
 import { WishlistService } from '#wishlist/wishlist.service';
 import { WishlistController } from '#wishlist/wishlist.controller';
+// Wish
+import { Wish } from '#wish/entities/wish.entity';
+import { WishModule } from '#wish/wish.module';
+import { WishController } from '#wish/wish.controller';
+import { WishService } from '#wish/wish.service';
 // User
 import { User } from '#users/entities/user.entity';
 import { UsersModule } from '#users/users.module';
@@ -17,14 +22,15 @@ import { DatabaseModule } from './database/database.module';
 import { AppConfigModule } from './config/config.module';
 
 @Module({
-  controllers: [AppController, UsersController, WishlistController],
-  providers: [AppService, UsersService, WishlistService],
+  controllers: [AppController, UsersController, WishlistController, WishController],
+  providers: [AppService, UsersService, WishlistService, WishService],
   imports: [
     AppConfigModule,
     DatabaseModule,
-    TypeOrmModule.forFeature([User, Wishlist]),
+    TypeOrmModule.forFeature([User, Wishlist, Wish]),
     UsersModule,
     WishlistModule,
+    WishModule,
   ],
 })
 export class AppModule {}
