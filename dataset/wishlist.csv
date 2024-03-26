@@ -1,2 +1,2 @@
-id,title,image,owner
-2bd222b6-4f32-4333-9392-98d3e803ba72,wishlist 1 (Test User),https://images.unsplash.com/photo-1708977517310-7f31ea71b421?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=500&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTcxMTA5MzQwMw&ixlib=rb-4.0.3&q=80&w=500,07fe2a48-5ab7-4b25-9de3-4b0b4706db4a
+id,title,image,owner,items
+2bd222b6-4f32-4333-9392-98d3e803ba72,Прикольные подарки,https://images.unsplash.com/photo-1708977517310-7f31ea71b421?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=500&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTcxMTA5MzQwMw&ixlib=rb-4.0.3&q=80&w=500,07fe2a48-5ab7-4b25-9de3-4b0b4706db4a,"{a235a09a-df8b-4681-bbf4-5811e9fdad63,bc11ef25-0850-4f82-b9cd-21faea9514a9}"

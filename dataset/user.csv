@@ -1,5 +1,2 @@
-id,username,about,avatar,email,password
-07fe2a48-5ab7-4b25-9de3-4b0b4706db4a,Test User,I am test user,https://i.pravatar.cc/200/?img=3,testuser@mail.com,1234
-029cc5f2-9844-4e8c-8647-9eef25620bf7,Friend One,about friend one,https://i.pravatar.cc/200/?img=12,friend1@mail.com,1234
-97eb4376-09f3-49b5-a258-5cfc4d0ec7ea,Friend Two,,https://i.pravatar.cc/200/?img=42,friend2@mail.com,1234
-ceb38491-69f0-4f22-815f-35c65c1edccd,Friend Three,I am super friend of Test User,https://i.pravatar.cc/200/?img=18,friend3@mail.com,1234
+id,username,about,avatar,email,password,wishes,wishlists
+07fe2a48-5ab7-4b25-9de3-4b0b4706db4a,Test User,I am test user,https://i.pravatar.cc/200/?img=3,testuser@mail.com,1234,"{a235a09a-df8b-4681-bbf4-5811e9fdad63,bc11ef25-0850-4f82-b9cd-21faea9514a9}","{2bd222b6-4f32-4333-9392-98d3e803ba72}"

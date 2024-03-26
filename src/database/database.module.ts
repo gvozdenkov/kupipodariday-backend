@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Wishlist } from '#wishlist/entities/wishlist.entity';
 import { User } from '#users/entities/user.entity';
+import { Wish } from '#wish/entities/wish.entity';
 
 @Module({
   imports: [
@@ -16,8 +17,8 @@ import { User } from '#users/entities/user.entity';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
-        entities: [User, Wishlist],
-        synchronize: false,
+        entities: [User, Wishlist, Wish],
+        synchronize: true,
       }),
     }),
   ],

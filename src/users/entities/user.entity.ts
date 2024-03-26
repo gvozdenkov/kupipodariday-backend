@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { Transform } from 'class-transformer';
 import { IsEmail, IsOptional, IsString, IsUrl, Length } from 'class-validator';
 import {
@@ -8,10 +9,10 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-// eslint-disable-next-line import/no-cycle
 import { Wishlist } from '#wishlist/entities/wishlist.entity';
+import { Wish } from '#wish/entities/wish.entity';
 
-@Entity('user_account')
+@Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -43,6 +44,9 @@ export class User {
 
   @OneToMany(() => Wishlist, (wishtlist) => wishtlist.owner)
   wishlists: Wishlist[];
+
+  @OneToMany(() => Wish, (wish) => wish.owner)
+  wishes: Wish[];
 
   @CreateDateColumn({ select: false })
   createdat: Date;

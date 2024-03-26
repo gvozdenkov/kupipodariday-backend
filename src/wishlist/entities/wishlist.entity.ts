@@ -3,12 +3,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 // eslint-disable-next-line import/no-cycle
 import { User } from '#users/entities/user.entity';
+// eslint-disable-next-line import/no-cycle
+import { Wish } from '#wish/entities/wish.entity';
 
 @Entity()
 export class Wishlist {
@@ -27,6 +31,10 @@ export class Wishlist {
 
   @ManyToOne(() => User, (user) => user.wishlists)
   owner: User;
+
+  @ManyToMany(() => Wish, (wish) => wish.id)
+  @JoinTable()
+  items: Wish[];
 
   @CreateDateColumn({ select: false })
   createdat: Date;
