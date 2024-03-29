@@ -10,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { User } from '#users/entities/user.entity';
 import { Wish } from '#wish/entities/wish.entity';
 
@@ -29,7 +30,7 @@ export class Wishlist {
   image: string;
 
   @ManyToOne(() => User, (user) => user.wishlists)
-  owner: User;
+  owner: Relation<User>;
 
   @ManyToMany(() => Wish, (wish) => wish.id)
   @JoinTable()

@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Wishlist } from '#wishlist/entities/wishlist.entity';
 import { Wish } from '#wish/entities/wish.entity';
+import { Offer } from '#offer/entities/offer.entity';
 
 @Entity()
 export class User {
@@ -47,6 +48,9 @@ export class User {
 
   @OneToMany(() => Wish, (wish) => wish.owner)
   wishes: Wish[];
+
+  @OneToMany(() => Offer, (offer) => offer.id)
+  offers: Offer[];
 
   @CreateDateColumn({ select: false })
   createdat: Date;
