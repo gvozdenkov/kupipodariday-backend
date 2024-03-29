@@ -8,7 +8,6 @@ import Joi from 'joi';
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
         PORT: Joi.number().required(),
-        BASE_PATH: Joi.string().default('/api'),
         PG_CONTAINER_NAME: Joi.string().default('wish-magic-db-dev'),
         POSTGRES_USER: Joi.string().required(),
         POSTGRES_PASSWORD: Joi.string().required(),

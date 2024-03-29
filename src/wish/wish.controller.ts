@@ -3,7 +3,10 @@ import { WishService } from './wish.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 
-@Controller('wish')
+@Controller({
+  version: '1',
+  path: 'wishes',
+})
 export class WishController {
   constructor(private readonly wishService: WishService) {}
 

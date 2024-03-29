@@ -29,4 +29,3 @@ services:
       # map env vars from .env file
       - NODE_ENV=${NODE_ENV}
       - PORT=${PORT}
-      - BASE_PATH=${BASE_PATH}

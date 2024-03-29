@@ -3,10 +3,10 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 
-var BASE_PATH = '/api';
-var mainControllerPath = 'users';
-
-@Controller(`${BASE_PATH}/v1`)
+@Controller({
+  version: '1',
+  path: 'users',
+})
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -15,7 +15,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @Get(mainControllerPath)
+  @Get()
   findAll() {
     return this.usersService.findAll();
   }
