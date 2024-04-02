@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import { IsNumber, IsString, IsUrl, Length } from 'class-validator';
 import {
   Entity,
@@ -6,12 +5,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
-  ManyToOne,
 } from 'typeorm';
-import type { Relation } from 'typeorm';
-import { Wishlist } from '#wishlist/entities/wishlist.entity';
-import { User } from '#users/entities/user.entity';
 
 @Entity()
 export class Wish {
@@ -47,12 +41,6 @@ export class Wish {
   @Column()
   @IsNumber({}, { message: `'copied' should be a positive number` })
   copied: number;
-
-  @ManyToMany(() => Wishlist, (wishtlist) => wishtlist.id)
-  wishlists: Wishlist[];
-
-  @ManyToOne(() => User, (user) => user.id)
-  owner: Relation<User>;
 
   @CreateDateColumn({ select: false })
   createdat: Date;

@@ -7,11 +7,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
 } from 'typeorm';
-import { Wishlist } from '#wishlist/entities/wishlist.entity';
-import { Wish } from '#wish/entities/wish.entity';
-import { Offer } from '#offer/entities/offer.entity';
 
 @Entity()
 export class User {
@@ -42,15 +38,6 @@ export class User {
   @Column('varchar', { length: 64, select: false })
   @Length(4, 64, { message: `'password' shoud be minimum 4 and maximum 64 charecters` })
   password: string;
-
-  @OneToMany(() => Wishlist, (wishtlist) => wishtlist.owner)
-  wishlists: Wishlist[];
-
-  @OneToMany(() => Wish, (wish) => wish.owner)
-  wishes: Wish[];
-
-  @OneToMany(() => Offer, (offer) => offer.id)
-  offers: Offer[];
 
   @CreateDateColumn({ select: false })
   createdat: Date;
