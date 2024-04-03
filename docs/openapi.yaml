@@ -637,7 +637,7 @@ components:
         - id
         - image
         - link
-        - name
+        - title
         - offers
         - owner
         - price
@@ -653,7 +653,7 @@ components:
         updatedAt:
           type: string
           format: date-time
-        name:
+        title:
           maxLength: 250
           minLength: 1
           type: string
@@ -685,7 +685,7 @@ components:
         - id
         - image
         - items
-        - name
+        - title
         - owner
         - updatedAt
       type: object
@@ -698,7 +698,7 @@ components:
         updatedAt:
           type: string
           format: date-time
-        name:
+        title:
           maxLength: 250
           minLength: 0
           type: string
@@ -801,7 +801,7 @@ components:
         - id
         - image
         - link
-        - name
+        - title
         - offers
         - price
         - raised
@@ -816,7 +816,7 @@ components:
         updatedAt:
           type: string
           format: date-time
-        name:
+        title:
           maxLength: 250
           minLength: 1
           type: string
@@ -854,23 +854,28 @@ components:
         - description
         - image
         - link
-        - name
+        - title
         - price
       type: object
       properties:
-        name:
+        title:
           maxLength: 250
           minLength: 1
           type: string
+          example: 'Loftus Original World Famous 19" Rubber Yellow Chicken -Classic Fun Joke Gag Toy'
         link:
           type: string
+          example: 'https://www.ebay.com/itm/332673910514?epid=1800195714&itmmeta=01HTH9FPWJ4NJWJFP8SHB61Z8V&hash=item4d74e906f2:g:mVwAAOSwg~RePg2u&itmprp=enc%3AAQAJAAAA0GdvIkz36RGVljc%2F351gsZXZFCUWmQf6e%2F%2BhCA2ULsz50mrgki6%2B1S2QQD3TwdecO7Eu%2F6c%2BrsE%2FhmAZcEGUzMwz7bp9E76qJ8SOiHAfc7cSTuQjC9NmcWI6J60I09TskSOJvQHrPZML%2FmhFQpZGwaRj%2Bvc7yxxmCiSbXpiBEdcuQHpQ4ut0H1uehboT2kTD6%2FgPJxdDxSH801Qwr3qnOQlIOX3CdDe1%2BFOtyBobGFPhayZLUIiOVR3a%2FaqYDEQmFWqW8JaofR0qn%2FEmRbo%2Ftbs%3D%7Ctkp%3ABk9SR7DuvqnUYw'
         image:
           type: string
+          example: 'https://i.ebayimg.com/images/g/m6AAAOSw6CJbFF8g/s-l960.png'
         price:
           minimum: 1
           type: number
+          example: 1011.37
         description:
           type: string
+          example: "There is a good reason that the Rubber Chicken has become such a classic gag in comedic circles. I mean look at it! It's just so freaking hysterical looking! And now you can have your daily dose of Rubber Chicken in super sized format with the Large 19\" Rubber Chicken!"
     UpdateWishDto:
       type: object
       properties: {}
@@ -890,7 +895,7 @@ components:
     CreateWishlistDto:
       type: object
       properties:
-        name:
+        title:
           type: string
           example: Мой вишлист
         image:
@@ -905,7 +910,7 @@ components:
     UpdateWishlistDto:
       type: object
       properties:
-        name:
+        title:
           type: string
           example: Мой вишлист
         image:
