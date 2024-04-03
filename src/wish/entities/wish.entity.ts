@@ -1,4 +1,5 @@
-import { IsNumber, IsString, IsUrl, Length } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNumber, IsOptional, IsString, IsUrl, Length } from 'class-validator';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -30,21 +31,31 @@ export class Wish {
   @IsUrl({}, { message: `'image' should be a valid link` })
   image: string;
 
-  @Column()
-  @IsNumber({}, { message: `'price' should be a positive number` })
+  @Column({ type: 'real' })
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: `'price' should be a positive number` })
+  @Transform((param) => Math.round(param.value * 100) / 100)
   price: number;
 
-  @Column()
-  @IsNumber({}, { message: `'raised' should be a positive number` })
-  raised: number;
+  @Column({ type: 'real' })
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 }, { message: `'raised' should be a positive number` })
+  @Transform((param) => Math.round(param.value * 100) / 100)
+  raised: number = 0;
 
   @Column()
+  @IsOptional()
   @IsNumber({}, { message: `'copied' should be a positive number` })
-  copied: number;
+  copied: number = 0;
+
+  @Column({ nullable: true })
+  owner: string;
+
+  @Column({ nullable: true })
+  offers: string;
 
   @CreateDateColumn({ select: false })
-  createdat: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ select: false })
-  updatedat: Date;
+  updatedAt: Date;
 }

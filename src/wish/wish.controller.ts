@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { WishService } from './wish.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
@@ -15,14 +15,19 @@ export class WishController {
     return this.wishService.create(createWishDto);
   }
 
-  @Get()
-  findAll() {
-    return this.wishService.findAll();
+  @Get('last')
+  findLast() {
+    return this.wishService.findLast();
+  }
+
+  @Get('top')
+  findTop() {
+    return this.wishService.findTop();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.wishService.findOne(+id);
+  findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.wishService.findById(id);
   }
 
   @Patch(':id')
