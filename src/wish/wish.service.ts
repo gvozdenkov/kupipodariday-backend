@@ -34,24 +34,33 @@ export class WishService {
 
   findTop() {
     return this.wishRepository.find({
-      order: { raised: 'DESC' },
+      order: { copied: 'DESC' },
       take: this.top,
     });
   }
 
-  findById(id: string) {
-    var wish = this.wishRepository.findOneBy({ id });
+  async findById(id: string) {
+    var wish = await this.wishRepository.findOneBy({ id });
 
     if (!wish) throw new NotFoundException(`Wish with '${id}' not found`);
 
     return wish;
   }
 
-  update(id: number, updateWishDto: UpdateWishDto) {
-    return `This action updates a #${id} wish ${updateWishDto}`;
+  async update(id: string, updateWishDto: UpdateWishDto) {
+    var wish = await this.findById(id);
+
+    return this.wishRepository.save({
+      ...wish,
+      ...updateWishDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} wish`;
+  async remove(id: string) {
+    var wish = await this.findById(id);
+
+    if (!wish) throw new NotFoundException(`Wish with '${id}' not found`);
+
+    return this.wishRepository.delete({ id });
   }
 }
