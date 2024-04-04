@@ -7,8 +7,6 @@ services:
     restart: always
     ports:
       - 5432:5432
-    # volumes:
-      # - ./dataset:/docker-entrypoint-initdb.d
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
