@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, ParseUUIDPipe } from '@nestjs/common';
 import { OfferService } from './offer.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
-import { UpdateOfferDto } from './dto/update-offer.dto';
 
 @Controller({
   version: '1',
@@ -16,22 +15,16 @@ export class OfferController {
   }
 
   @Get()
-  findAll() {
-    return this.offerService.findAll();
+  async findAll(@Query('p') page: number, @Query('s') pageSize: number) {
+    var { 0: offers, 1: count } = await this.offerService.findAll(page, pageSize);
+    var next = count - pageSize * page > 0;
+    var prev = page !== 1;
+    var pages = Math.ceil(count / pageSize);
+    return { offers, page, pages, next, prev };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.offerService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOfferDto: UpdateOfferDto) {
-    return this.offerService.update(+id, updateOfferDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.offerService.remove(+id);
+  findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.offerService.findById(id);
   }
 }
