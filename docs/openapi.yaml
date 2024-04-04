@@ -524,8 +524,8 @@ components:
       type: object
       properties:
         id:
-          type: number
-          example: 5
+          type: string
+          format: uuid
         username:
           maxLength: 64
           minLength: 1
@@ -583,7 +583,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time
@@ -602,7 +603,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time
@@ -646,7 +648,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time
@@ -691,7 +694,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time
@@ -725,8 +729,8 @@ components:
       type: object
       properties:
         id:
-          type: number
-          example: 5
+          type: string
+          format: uuid
         username:
           maxLength: 64
           minLength: 1
@@ -772,8 +776,8 @@ components:
       type: object
       properties:
         id:
-          type: number
-          example: 5
+          type: string
+          format: uuid
         username:
           maxLength: 64
           minLength: 1
@@ -809,7 +813,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time
@@ -891,7 +896,8 @@ components:
         hidden:
           type: boolean
         itemId:
-          type: number
+          type: string
+          format: uuid
     CreateWishlistDto:
       type: object
       properties:
@@ -984,8 +990,8 @@ components:
       type: object
       properties:
         id:
-          type: number
-          example: 5
+          type: string
+          format: uuid
         username:
           maxLength: 64
           minLength: 1
