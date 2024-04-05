@@ -684,12 +684,11 @@ components:
             $ref: '#/components/schemas/Offer'
     Wishlist:
       required:
-        - createdAt
         - id
-        - image
-        - items
         - title
+        - items
         - owner
+        - createdAt
         - updatedAt
       type: object
       properties:
@@ -706,7 +705,11 @@ components:
           maxLength: 250
           minLength: 0
           type: string
-        image:
+        description:
+          maxLength: 1500
+          minLength: 2
+          type: string
+        cover:
           type: string
         owner:
           $ref: '#/components/schemas/UserPublicProfileResponseDto'
@@ -903,31 +906,29 @@ components:
       properties:
         title:
           type: string
-          example: Мой вишлист
-        image:
+          example: New Wishlist
+        cover:
           type: string
-          example: https://i.pravatar.cc/150?img=3
-        itemsId:
+          example: https://placehold.jp/b0b0b0/ffffff/200x200.png?text=New%20Wishlist
+        itemIds:
           type: array
-          example:
-            - 1
           items:
-            type: number
+            type: string
+            format: uuid
     UpdateWishlistDto:
       type: object
       properties:
         title:
           type: string
           example: Мой вишлист
-        image:
+        cover:
           type: string
-          example: https://i.pravatar.cc/150?img=3
-        itemsId:
+          example: https://placehold.jp/b0b0b0/ffffff/200x200.png?text=Updated%20Wishlist
+        itemIds:
           type: array
-          example:
-            - 1
           items:
-            type: number
+            type: string
+            format: uuid
     SigninUserDto:
       required:
         - password
