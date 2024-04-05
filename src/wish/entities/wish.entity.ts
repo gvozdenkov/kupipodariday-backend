@@ -50,8 +50,8 @@ export class Wish {
   @Column({ nullable: true })
   owner: string;
 
-  @Column({ nullable: true })
-  offers: string;
+  @Column('text', { array: true })
+  offers: string[] = [];
 
   @CreateDateColumn({ select: false })
   createdAt: Date;

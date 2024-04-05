@@ -42,14 +42,14 @@ export class User {
   @Length(4, 64, { message: `'password' shoud be minimum 4 and maximum 64 charecters` })
   password: string;
 
-  @Column({ nullable: true })
-  wishes: string;
+  @Column('text', { array: true })
+  wishes: string[] = [];
 
-  @Column({ nullable: true })
-  wishlists: string;
+  @Column('text', { array: true })
+  wishlists: string[] = [];
 
-  @Column({ nullable: true })
-  offers: string;
+  @Column('text', { array: true })
+  offers: string[] = [];
 
   @CreateDateColumn({ select: false })
   createdAt: Date;

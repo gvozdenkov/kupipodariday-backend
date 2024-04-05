@@ -32,7 +32,6 @@ export class Wishlist {
   owner: string;
 
   @Column('text', { array: true })
-  @IsOptional()
   itemIds: string[] = [];
 
   @CreateDateColumn({ select: false })
