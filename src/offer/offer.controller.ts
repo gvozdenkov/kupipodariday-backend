@@ -15,12 +15,22 @@ export class OfferController {
   }
 
   @Get()
-  async findAll(@Query('p') page: number, @Query('s') pageSize: number) {
+  async findAll(@Query('page') page: number, @Query('size') pageSize: number) {
     var { 0: offers, 1: count } = await this.offerService.findAll(page, pageSize);
-    var next = count - pageSize * page > 0;
-    var prev = page !== 1;
-    var pages = Math.ceil(count / pageSize);
-    return { offers, page, pages, next, prev };
+    var nextPage = count - pageSize * page > 0;
+    var prevPage = page !== 1;
+    var totalPages = Math.ceil(count / pageSize);
+
+    return {
+      data: offers,
+      pagination: {
+        total_records: count,
+        current_page: page,
+        total_pages: totalPages,
+        next_page: nextPage,
+        prev_page: prevPage,
+      },
+    };
   }
 
   @Get(':id')
