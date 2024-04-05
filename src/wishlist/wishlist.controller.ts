@@ -8,6 +8,8 @@ import {
   Delete,
   Query,
   ParseUUIDPipe,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
@@ -26,7 +28,10 @@ export class WishlistController {
   }
 
   @Get()
-  async findAll(@Query('page') page: number, @Query('size') pageSize: number) {
+  async findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('size', new DefaultValuePipe(1), ParseIntPipe) pageSize: number = 10,
+  ) {
     var { 0: offers, 1: count } = await this.wishlistService.findAll(page, pageSize);
     var nextPage = count - pageSize * page > 0;
     var prevPage = page !== 1;

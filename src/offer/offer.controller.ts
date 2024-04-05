@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Param, Query, ParseUUIDPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  ParseUUIDPipe,
+  ParseIntPipe,
+  DefaultValuePipe,
+} from '@nestjs/common';
 import { OfferService } from './offer.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
 
@@ -15,8 +25,12 @@ export class OfferController {
   }
 
   @Get()
-  async findAll(@Query('page') page: number, @Query('size') pageSize: number) {
+  async findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('size', new DefaultValuePipe(1), ParseIntPipe) pageSize: number = 10,
+  ) {
     var { 0: offers, 1: count } = await this.offerService.findAll(page, pageSize);
+
     var nextPage = count - pageSize * page > 0;
     var prevPage = page !== 1;
     var totalPages = Math.ceil(count / pageSize);
