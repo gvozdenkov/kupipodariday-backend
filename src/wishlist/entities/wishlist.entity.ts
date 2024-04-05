@@ -1,4 +1,4 @@
-import { IsOptional, IsString, Length } from 'class-validator';
+import { IsOptional, IsString, IsUrl, Length } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -15,16 +15,29 @@ export class Wishlist {
   @Column('varchar', { length: 64 })
   @IsString()
   @Length(2, 250, { message: `'title' should have minium 2 and maximum 64 characters` })
-  title: string;
+  title: string = 'New Wishlist';
+
+  @Column('varchar', { length: 1500, nullable: true })
+  @IsString()
+  @IsOptional()
+  @Length(2, 1500, { message: `'description' should have minium 2 and maximum 1500 characters` })
+  description: string;
 
   @Column()
   @IsOptional()
-  @IsString()
-  image: string;
+  @IsUrl({}, { message: `'cover' should be a valid link to the wishlist cover` })
+  cover: string = `https://placehold.jp/b0b0b0/ffffff/200x200.png?text=New%20Wishlist`;
+
+  @Column({ nullable: true })
+  owner: string;
+
+  @Column('text', { array: true })
+  @IsOptional()
+  itemIds: string[] = [];
 
   @CreateDateColumn({ select: false })
-  createdat: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ select: false })
-  updatedat: Date;
+  updatedAt: Date;
 }

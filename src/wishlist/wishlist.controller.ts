@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
@@ -16,22 +26,39 @@ export class WishlistController {
   }
 
   @Get()
-  findAll() {
-    return this.wishlistService.findAll();
+  async findAll(@Query('page') page: number, @Query('size') pageSize: number) {
+    var { 0: offers, 1: count } = await this.wishlistService.findAll(page, pageSize);
+    var nextPage = count - pageSize * page > 0;
+    var prevPage = page !== 1;
+    var totalPages = Math.ceil(count / pageSize);
+
+    return {
+      data: offers,
+      pagination: {
+        total_records: count,
+        current_page: page,
+        total_pages: totalPages,
+        next_page: nextPage,
+        prev_page: prevPage,
+      },
+    };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.wishlistService.findOne(+id);
+  findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.wishlistService.findById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWishlistDto: UpdateWishlistDto) {
-    return this.wishlistService.update(+id, updateWishlistDto);
+  update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() updateWishlistDto: UpdateWishlistDto,
+  ) {
+    return this.wishlistService.update(id, updateWishlistDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.wishlistService.remove(+id);
+  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.wishlistService.remove(id);
   }
 }
