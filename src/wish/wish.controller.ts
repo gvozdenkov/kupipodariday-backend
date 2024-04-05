@@ -31,12 +31,15 @@ export class WishController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWishDto: UpdateWishDto) {
+  update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() updateWishDto: UpdateWishDto,
+  ) {
     return this.wishService.update(id, updateWishDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.wishService.remove(id);
   }
 }
