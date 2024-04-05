@@ -5,5 +5,5 @@ export class CreateWishlistDto extends PickType(Wishlist, [
   'title',
   'description',
   'cover',
-  'itemIds',
+  'items',
 ]) {}

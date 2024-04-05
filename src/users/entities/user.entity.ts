@@ -1,5 +1,5 @@
-/* eslint-disable import/no-cycle */
 import { Transform } from 'class-transformer';
+/* eslint-disable import/no-cycle */
 import { IsEmail, IsOptional, IsString, IsUrl, Length, Matches } from 'class-validator';
 import {
   Entity,
@@ -7,7 +7,12 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import type { Relation } from 'typeorm';
+import { Wishlist } from '#wishlist/entities/wishlist.entity';
+import { Wish } from '#wish/entities/wish.entity';
+import { Offer } from '#offer/entities/offer.entity';
 
 @Entity()
 export class User {
@@ -42,14 +47,17 @@ export class User {
   @Length(4, 64, { message: `'password' shoud be minimum 4 and maximum 64 charecters` })
   password: string;
 
-  @Column('text', { array: true })
-  wishes: string[] = [];
+  // Many Wishes belong to unique user
+  @OneToMany(() => Wish, (wish) => wish.owner)
+  wishes: Relation<Wish[]>;
 
-  @Column('text', { array: true })
-  wishlists: string[] = [];
+  // Many Wishlists belong to unique user
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.owner)
+  wishlists: Relation<Wishlist[]>;
 
-  @Column('text', { array: true })
-  offers: string[] = [];
+  // Many Offers belong to unique user
+  @OneToMany(() => Offer, (offer) => offer.user)
+  offers: Relation<Offer[]>;
 
   @CreateDateColumn({ select: false })
   createdAt: Date;

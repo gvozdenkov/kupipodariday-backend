@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { Transform } from 'class-transformer';
 import { IsNumber, IsOptional, IsString, IsUrl, Length } from 'class-validator';
 import {
@@ -6,7 +7,14 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
 } from 'typeorm';
+import type { Relation } from 'typeorm';
+import { Wishlist } from '#wishlist/entities/wishlist.entity';
+import { User } from '#users/entities/user.entity';
+import { Offer } from '#offer/entities/offer.entity';
 
 @Entity()
 export class Wish {
@@ -47,11 +55,17 @@ export class Wish {
   @IsNumber({}, { message: `'copied' should be a positive number` })
   copied: number = 0;
 
-  @Column({ nullable: true })
-  owner: string;
+  // Many Wishes belong to unique user
+  @ManyToOne(() => User, (user) => user.wishlists)
+  owner: Relation<User>;
 
-  @Column('text', { array: true })
-  offers: string[] = [];
+  // Many Offers for one Wish
+  @OneToMany(() => Offer, (offer) => offer.item)
+  offers: Relation<Offer[]>;
+
+  // Wish located in many Wishlists, Each Wishlist contains many Wises
+  @ManyToMany(() => Wishlist, (wishlist) => wishlist.items)
+  wishlists: Relation<Wishlist[]>;
 
   @CreateDateColumn({ select: false })
   createdAt: Date;

@@ -1,24 +1,30 @@
+/* eslint-disable import/no-cycle */
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import type { Relation } from 'typeorm';
+import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { User } from '#users/entities/user.entity';
+import { Wish } from '#wish/entities/wish.entity';
 
 @Entity()
 export class Offer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
-  user: string;
+  // Many Offers belong to unique user
+  @ManyToOne(() => User, (user) => user.wishlists)
+  user: Relation<User>;
 
-  @Column()
-  @IsString()
-  itemId: string;
+  // Many Offers belong to unique Wish
+  @ManyToOne(() => Wish, (wish) => wish.offers)
+  item: Relation<Wish>;
 
   @Column({ type: 'real' })
   @IsNumber({ maxDecimalPlaces: 2 }, { message: `'amount' should be a positive number` })

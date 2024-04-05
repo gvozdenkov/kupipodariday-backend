@@ -1,11 +1,16 @@
+/* eslint-disable import/no-cycle */
 import { IsOptional, IsString, IsUrl, Length } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { User } from '#users/entities/user.entity';
+import { Wish } from '#wish/entities/wish.entity';
 
 @Entity()
 export class Wishlist {
@@ -28,11 +33,13 @@ export class Wishlist {
   @IsUrl({}, { message: `'cover' should be a valid link to the wishlist cover` })
   cover: string = `https://placehold.jp/b0b0b0/ffffff/200x200.png?text=New%20Wishlist`;
 
-  @Column({ nullable: true })
-  owner: string;
+  // Wish located in many Wishlists, Each Wishlist contains many Wises
+  @ManyToMany(() => Wish, (wish) => wish.wishlists)
+  items: Wish[];
 
-  @Column('text', { array: true })
-  itemIds: string[] = [];
+  // Many WishList can belong to unique user
+  @ManyToOne(() => User, (user) => user.wishlists)
+  owner: User;
 
   @CreateDateColumn({ select: false })
   createdAt: Date;
