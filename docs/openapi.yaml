@@ -890,7 +890,7 @@ components:
     CreateOfferDto:
       required:
         - amount
-        - itemId
+        - item
       type: object
       properties:
         amount:
@@ -898,7 +898,7 @@ components:
           type: number
         hidden:
           type: boolean
-        itemId:
+        item:
           type: string
           format: uuid
     CreateWishlistDto:
@@ -910,7 +910,7 @@ components:
         cover:
           type: string
           example: https://placehold.jp/b0b0b0/ffffff/200x200.png?text=New%20Wishlist
-        itemIds:
+        items:
           type: array
           items:
             type: string
@@ -924,7 +924,7 @@ components:
         cover:
           type: string
           example: https://placehold.jp/b0b0b0/ffffff/200x200.png?text=Updated%20Wishlist
-        itemIds:
+        items:
           type: array
           items:
             type: string
