@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
+import { Wish } from '#wish/entities/wish.entity';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
 import { Wishlist } from './entities/wishlist.entity';
@@ -10,10 +11,16 @@ export class WishlistService {
   constructor(
     @InjectRepository(Wishlist)
     private readonly wishListRepository: Repository<Wishlist>,
+    @InjectRepository(Wish)
+    private wishRepository: Repository<Wish>,
   ) {}
 
-  create(createWishlistDto: CreateWishlistDto) {
-    var wishList = this.wishListRepository.create(createWishlistDto);
+  async create(createWishlistDto: CreateWishlistDto) {
+    var { items } = createWishlistDto;
+
+    var wishes: Wish[] = await this.wishRepository.findBy({ id: In(items) });
+
+    var wishList = this.wishListRepository.create({ ...createWishlistDto, items: wishes });
 
     return this.wishListRepository.save(wishList);
   }
@@ -22,11 +29,15 @@ export class WishlistService {
     return this.wishListRepository.findAndCount({
       take: pageSize,
       skip: pageSize * (page - 1),
+      relations: ['owner', 'items'],
     });
   }
 
   async findById(id: string) {
-    var wishlist = await this.wishListRepository.findOneBy({ id });
+    var wishlist = await this.wishListRepository.findOne({
+      where: { id },
+      relations: ['items'],
+    });
 
     if (!wishlist) throw new NotFoundException(`Wishlist with '${id}' not found`);
 
@@ -36,16 +47,21 @@ export class WishlistService {
   async update(id: string, updateWishlistDto: UpdateWishlistDto) {
     var wishList = await this.findById(id);
 
+    var { title, description, cover, items } = updateWishlistDto;
+
+    var newWishes: Wish[] = items?.length && (await this.wishRepository.findBy({ id: In(items) }));
+
     return this.wishListRepository.save({
       ...wishList,
-      ...updateWishlistDto,
+      title,
+      description,
+      cover,
+      items: newWishes && [...newWishes],
     });
   }
 
   async remove(id: string) {
     var wishList = await this.findById(id);
-
-    if (!wishList) throw new NotFoundException(`Wishlist with '${id}' not found`);
 
     await this.wishListRepository.delete({ id });
 

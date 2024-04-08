@@ -23,7 +23,7 @@ export class WishlistController {
   constructor(private readonly wishlistService: WishlistService) {}
 
   @Post()
-  create(@Body() createWishlistDto: CreateWishlistDto) {
+  async create(@Body() createWishlistDto: CreateWishlistDto) {
     return this.wishlistService.create(createWishlistDto);
   }
 
