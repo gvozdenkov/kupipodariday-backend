@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -35,6 +36,7 @@ export class Wishlist {
 
   // Wish located in many Wishlists, Each Wishlist contains many Wises
   @ManyToMany(() => Wish, (wish) => wish.wishlists)
+  @JoinTable()
   items: Wish[];
 
   // Many WishList can belong to unique user
