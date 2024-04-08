@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 /* eslint-disable import/no-cycle */
-import { IsEmail, IsOptional, IsString, IsUrl, Length, Matches } from 'class-validator';
+import { IsEmail, IsOptional, IsString, IsUrl, Length, Matches, Min } from 'class-validator';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -8,8 +8,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  BeforeInsert,
 } from 'typeorm';
 import type { Relation } from 'typeorm';
+import bcrypt from 'bcrypt';
 import { Wishlist } from '#wishlist/entities/wishlist.entity';
 import { Wish } from '#wish/entities/wish.entity';
 import { Offer } from '#offer/entities/offer.entity';
@@ -44,7 +46,7 @@ export class User {
   email: string;
 
   @Column('varchar', { length: 64, select: false })
-  @Length(4, 64, { message: `'password' shoud be minimum 4 and maximum 64 charecters` })
+  @Min(4, { message: `'password' shoud be minimum 4 charecters` })
   password: string;
 
   // Many Wishes belong to unique user
@@ -64,4 +66,10 @@ export class User {
 
   @UpdateDateColumn({ select: false })
   updatedAt: Date;
+
+  @BeforeInsert()
+  async hashPassword() {
+    var salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 }
