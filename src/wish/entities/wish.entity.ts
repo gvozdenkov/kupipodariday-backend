@@ -1,26 +1,15 @@
 /* eslint-disable import/no-cycle */
-import { Transform } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, IsUrl, Length } from 'class-validator';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { IsNumber, IsOptional, IsString, IsUrl, Length, Min } from 'class-validator';
+import { Entity, Column, ManyToOne, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import type { Relation } from 'typeorm';
-import { Wishlist } from '#wishlist/entities/wishlist.entity';
+import { AbstractEntity } from '#common';
 import { User } from '#users/entities/user.entity';
 import { Offer } from '#offer/entities/offer.entity';
+import { Transform } from 'class-transformer';
+import { Wishlist } from '#wishlist/entities/wishlist.entity';
 
 @Entity()
-export class Wish {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class Wish extends AbstractEntity {
   @Column('varchar', { length: 64 })
   @IsString()
   @Length(2, 250, { message: `'title' should have minium 2 and maximum 250 characters` })
@@ -39,37 +28,44 @@ export class Wish {
   @IsUrl({}, { message: `'image' should be a valid link` })
   image: string;
 
-  @Column({ type: 'real' })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+  })
   @IsNumber({ maxDecimalPlaces: 2 }, { message: `'price' should be a positive number` })
+  @Min(0)
   @Transform((param) => Math.round(param.value * 100) / 100)
   price: number;
 
-  @Column({ type: 'real' })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+  })
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 }, { message: `'raised' should be a positive number` })
+  @Min(0)
   @Transform((param) => Math.round(param.value * 100) / 100)
   raised: number = 0;
 
-  @Column()
+  @Column({
+    type: 'integer',
+  })
   @IsOptional()
-  @IsNumber({}, { message: `'copied' should be a positive number` })
+  @IsNumber({}, { message: `'copied' should be an integer number` })
+  @Min(0)
   copied: number = 0;
 
   // Many Wishes belong to unique user
-  @ManyToOne(() => User, (user) => user.wishlists)
+  @ManyToOne(() => User, (user) => user.wishes)
   owner: Relation<User>;
 
   // Many Offers for one Wish
   @OneToMany(() => Offer, (offer) => offer.item)
   offers: Relation<Offer[]>;
 
-  // Wish located in many Wishlists, Each Wishlist contains many Wises
-  @ManyToMany(() => Wishlist, (wishlist) => wishlist.items)
+  @ManyToMany(() => Wishlist, (wishlist) => wishlist.items, { cascade: true })
+  @JoinTable()
   wishlists: Relation<Wishlist[]>;
-
-  @CreateDateColumn({ select: false })
-  createdAt: Date;
-
-  @UpdateDateColumn({ select: false })
-  updatedAt: Date;
 }

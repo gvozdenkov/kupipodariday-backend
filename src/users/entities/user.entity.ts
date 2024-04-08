@@ -1,26 +1,16 @@
-import { Transform } from 'class-transformer';
 /* eslint-disable import/no-cycle */
+import { Transform } from 'class-transformer';
 import { IsEmail, IsOptional, IsString, IsUrl, Length, Matches, Min } from 'class-validator';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-  BeforeInsert,
-} from 'typeorm';
+import { Entity, Column, OneToMany, BeforeInsert } from 'typeorm';
 import type { Relation } from 'typeorm';
 import bcrypt from 'bcrypt';
 import { Wishlist } from '#wishlist/entities/wishlist.entity';
+import { AbstractEntity } from '#common';
 import { Wish } from '#wish/entities/wish.entity';
 import { Offer } from '#offer/entities/offer.entity';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class User extends AbstractEntity {
   @Column('varchar', { length: 64, unique: true })
   @IsString()
   @Length(2, 64, { message: `'username' should have minium 2 and maximum 64 characters` })
@@ -60,12 +50,6 @@ export class User {
   // Many Offers belong to unique user
   @OneToMany(() => Offer, (offer) => offer.user)
   offers: Relation<Offer[]>;
-
-  @CreateDateColumn({ select: false })
-  createdAt: Date;
-
-  @UpdateDateColumn({ select: false })
-  updatedAt: Date;
 
   @BeforeInsert()
   async hashPassword() {
