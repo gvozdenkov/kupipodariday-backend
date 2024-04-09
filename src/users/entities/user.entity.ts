@@ -1,9 +1,8 @@
 /* eslint-disable import/no-cycle */
 import { Transform } from 'class-transformer';
-import { IsEmail, IsOptional, IsString, IsUrl, Length, Matches, Min } from 'class-validator';
-import { Entity, Column, OneToMany, BeforeInsert } from 'typeorm';
+import { IsEmail, IsOptional, IsString, IsUrl, Length, Matches, MinLength } from 'class-validator';
+import { Entity, Column, OneToMany } from 'typeorm';
 import type { Relation } from 'typeorm';
-import bcrypt from 'bcrypt';
 import { Wishlist } from '#wishlist/entities/wishlist.entity';
 import { AbstractEntity } from '#common';
 import { Wish } from '#wish/entities/wish.entity';
@@ -14,8 +13,8 @@ export class User extends AbstractEntity {
   @Column('varchar', { length: 64, unique: true })
   @IsString()
   @Length(2, 64, { message: `'username' should have minium 2 and maximum 64 characters` })
-  @Matches(/^[A-Za-z-]+$/, {
-    message: `'username' must consist only of Latin characters and hyphens and without spaces`,
+  @Matches(/^[A-Za-z0-9-]+$/, {
+    message: `'username' must consist only of Latin characters, numbers and hyphens ( without spaces)`,
   })
   username: string;
 
@@ -31,12 +30,12 @@ export class User extends AbstractEntity {
   avatar: string = `https://i.pravatar.cc/200/?img=${Math.floor(Math.random() * 70) + 1}`;
 
   @Column({ unique: true })
-  @IsEmail()
+  @IsEmail({}, { message: `'email' should be a valid email` })
   @Transform((param) => param.value.toLowerCase())
   email: string;
 
   @Column('varchar', { length: 64, select: false })
-  @Min(4, { message: `'password' shoud be minimum 4 charecters` })
+  @MinLength(4, { message: `'password' shoud be minimum 4 charecters` })
   password: string;
 
   // Many Wishes belong to unique user
@@ -50,10 +49,4 @@ export class User extends AbstractEntity {
   // Many Offers belong to unique user
   @OneToMany(() => Offer, (offer) => offer.user)
   offers: Relation<Offer[]>;
-
-  @BeforeInsert()
-  async hashPassword() {
-    var salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(this.password, salt);
-  }
 }
