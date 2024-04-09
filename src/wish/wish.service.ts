@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
@@ -49,6 +49,13 @@ export class WishService {
 
   async update(id: string, updateWishDto: UpdateWishDto) {
     var wish = await this.findById(id);
+
+    var { link, price } = updateWishDto;
+
+    if (wish.raised !== 0 && (link || price))
+      throw new BadRequestException(
+        'You cannot change a wish for which money has already been deposited',
+      );
 
     return this.wishRepository.save({
       ...wish,
