@@ -18,7 +18,7 @@ export class WishlistService {
   async create(createWishlistDto: CreateWishlistDto) {
     var { items } = createWishlistDto;
 
-    var wishes: Wish[] = await this.wishRepository.findBy({ id: In(items) });
+    var wishes = await this.wishRepository.findBy({ id: In(items) });
 
     var wishList = this.wishListRepository.create({ ...createWishlistDto, items: wishes });
 
@@ -49,7 +49,7 @@ export class WishlistService {
 
     var { title, description, cover, items } = updateWishlistDto;
 
-    var newWishes: Wish[] = items?.length && (await this.wishRepository.findBy({ id: In(items) }));
+    var newWishes = items?.length && (await this.wishRepository.findBy({ id: In(items) }));
 
     return this.wishListRepository.save({
       ...wishList,
