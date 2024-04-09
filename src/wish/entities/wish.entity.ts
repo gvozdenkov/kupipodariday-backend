@@ -2,7 +2,7 @@
 import { IsNumber, IsOptional, IsString, IsUrl, Length, Min } from 'class-validator';
 import { Entity, Column, ManyToOne, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import type { Relation } from 'typeorm';
-import { AbstractEntity } from '#common';
+import { AbstractEntity, ColumnNumericTransformer } from '#common';
 import { User } from '#users/entities/user.entity';
 import { Offer } from '#offer/entities/offer.entity';
 import { Transform } from 'class-transformer';
@@ -32,6 +32,7 @@ export class Wish extends AbstractEntity {
     type: 'decimal',
     precision: 10,
     scale: 2,
+    transformer: new ColumnNumericTransformer(),
   })
   @IsNumber({ maxDecimalPlaces: 2 }, { message: `'price' should be a positive number` })
   @Min(0)
@@ -42,6 +43,7 @@ export class Wish extends AbstractEntity {
     type: 'decimal',
     precision: 10,
     scale: 2,
+    transformer: new ColumnNumericTransformer(),
   })
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 }, { message: `'raised' should be a positive number` })
