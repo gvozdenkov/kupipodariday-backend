@@ -14,6 +14,7 @@ import Joi from 'joi';
         POSTGRES_DB: Joi.string().required(),
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.number().required(),
+        JWT_SECRET: Joi.string().required(),
       }),
       validationOptions: {
         allowUnknown: true,
