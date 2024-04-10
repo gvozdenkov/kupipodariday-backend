@@ -25,6 +25,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { AppConfigModule } from './config/config.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   controllers: [
@@ -43,6 +44,7 @@ import { AppConfigModule } from './config/config.module';
     WishlistModule,
     WishModule,
     OfferModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
