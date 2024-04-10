@@ -67,7 +67,7 @@ export class Wish extends AbstractEntity {
   @OneToMany(() => Offer, (offer) => offer.item)
   offers: Relation<Offer[]>;
 
-  @ManyToMany(() => Wishlist, (wishlist) => wishlist.items, { cascade: true })
+  @ManyToMany(() => Wishlist, (wishlist) => wishlist.items)
   @JoinTable()
   wishlists: Relation<Wishlist[]>;
 }

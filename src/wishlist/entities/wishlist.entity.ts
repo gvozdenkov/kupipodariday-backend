@@ -28,8 +28,6 @@ export class Wishlist extends AbstractEntity {
   items: Wish[];
 
   // Many WishList can belong to unique user
-  @ManyToOne(() => User, (user) => user.wishlists, {
-    cascade: true,
-  })
+  @ManyToOne(() => User, (user) => user.wishlists)
   owner: User;
 }
