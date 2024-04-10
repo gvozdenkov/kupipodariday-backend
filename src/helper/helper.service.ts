@@ -3,8 +3,8 @@ import bcrypt from 'bcrypt';
 
 @Injectable()
 export class HelperService {
-  compare(password: string, userPassword: string) {
-    return bcrypt.compare(password, userPassword);
+  compare(password: string, hashedPassword: string) {
+    return bcrypt.compare(password, hashedPassword);
   }
 
   hash(password: string) {
