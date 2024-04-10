@@ -1,11 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import bcrypt from 'bcrypt';
+import { HelperService } from '#helper/helper.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { FindUserByFilterDto } from './dto/find-user-by-filter.dto';
-import { FindUserByUsernameDto } from './dto/find-user-by-username.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
@@ -13,6 +12,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly helperService: HelperService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -31,8 +31,7 @@ export class UsersService {
       if (isEmailExists) throw new ConflictException(`user with '${email}' email already exists`);
     }
 
-    var salt = await bcrypt.genSalt();
-    var hashedPassword = await bcrypt.hash(password, salt);
+    var hashedPassword = await this.helperService.hash(password);
 
     return await this.userRepository.save({ ...createUserDto, password: hashedPassword });
   }
@@ -41,8 +40,7 @@ export class UsersService {
     var { password } = updateUserDto;
 
     if (password) {
-      var salt = await bcrypt.genSalt();
-      var hashedPassword = await bcrypt.hash(password, salt);
+      var hashedPassword = await this.helperService.hash(password);
 
       return this.userRepository.save({
         ...updateUserDto,
@@ -64,11 +62,18 @@ export class UsersService {
     return user;
   }
 
-  async findByUsername(findUserByUsernameDto: FindUserByUsernameDto) {
-    var { username } = findUserByUsernameDto;
+  async findByUsername(username: string) {
     var user = await this.userRepository.findOneBy({ username });
 
     if (!user) throw new NotFoundException(`user with '${username}' username not found`);
+
+    return user;
+  }
+
+  async findByEmail(email: string) {
+    var user = await this.userRepository.findOneBy({ email });
+
+    if (!user) throw new NotFoundException(`user with '${email}' email not found`);
 
     return user;
   }

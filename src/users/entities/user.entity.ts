@@ -34,7 +34,7 @@ export class User extends AbstractEntity {
   @Transform((param) => param.value.toLowerCase())
   email: string;
 
-  @Column('varchar', { length: 64, select: false })
+  @Column('varchar', { length: 64 })
   @MinLength(4, { message: `'password' shoud be minimum 4 charecters` })
   password: string;
 

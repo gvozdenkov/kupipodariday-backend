@@ -22,16 +22,6 @@ export class UsersController {
 
   @Get(':username')
   findByUsername(@Param('username') username: string) {
-    return this.usersService.findByUsername({ username });
+    return this.usersService.findByUsername(username);
   }
-
-  // @Patch(`${mainControllerPath}:id`)
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.usersService.update(+id, updateUserDto);
-  // }
-
-  // @Delete(`${mainControllerPath}:id`)
-  // remove(@Param('id') id: string) {
-  //   return this.usersService.remove(+id);
-  // }
 }
