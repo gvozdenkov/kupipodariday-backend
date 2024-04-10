@@ -6,7 +6,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { FindUserByFilterDto } from './dto/find-user-by-filter.dto';
 import { FindUserByUsernameDto } from './dto/find-user-by-username.dto';
-import { ResponseUserDto } from './dto/response-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
@@ -35,18 +34,7 @@ export class UsersService {
     var salt = await bcrypt.genSalt();
     var hashedPassword = await bcrypt.hash(password, salt);
 
-    var newUser = this.userRepository.create({ ...createUserDto, password: hashedPassword });
-
-    await this.userRepository.save(newUser);
-
-    var newUserRes: ResponseUserDto = {
-      username: newUser.username,
-      about: newUser.about,
-      avatar: newUser.avatar,
-      email: newUser.email,
-    };
-
-    return newUserRes;
+    return await this.userRepository.save({ ...createUserDto, password: hashedPassword });
   }
 
   async update(updateUserDto: UpdateUserDto) {

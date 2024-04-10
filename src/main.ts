@@ -1,5 +1,5 @@
-import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { ClassSerializerInterceptor, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule } from '@nestjs/swagger';
 import YAML from 'js-yaml';
@@ -20,6 +20,14 @@ var bootstrap = () => {
       type: VersioningType.URI,
     });
     app.enableCors();
+
+    // for DTO every property is excluded by default unless you mark it as exposed
+    app.useGlobalInterceptors(
+      new ClassSerializerInterceptor(app.get(Reflector), {
+        strategy: 'excludeAll',
+        excludeExtraneousValues: true,
+      }),
+    );
 
     var openApiSpec = YAML.load(fs.readFileSync('docs/openapi.yaml', 'utf-8'));
 
