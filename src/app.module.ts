@@ -26,6 +26,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { AppConfigModule } from './config/config.module';
 import { AuthModule } from './auth/auth.module';
+import { HelperModule } from './helper/helper.module';
 
 @Module({
   controllers: [
@@ -45,6 +46,7 @@ import { AuthModule } from './auth/auth.module';
     WishModule,
     OfferModule,
     AuthModule,
+    HelperModule,
   ],
 })
 export class AppModule {}
