@@ -20,12 +20,13 @@ import { Offer } from '#offer/entities/offer.entity';
 import { OfferModule } from '#offer/offer.module';
 import { OfferService } from '#offer/offer.service';
 import { OfferController } from '#offer/offer.controller';
+// Auth
+import { AuthModule } from '#auth/auth.module';
 // App
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { AppConfigModule } from './config/config.module';
-import { AuthModule } from './auth/auth.module';
 import { HelperModule } from './helper/helper.module';
 
 @Module({

@@ -5,6 +5,7 @@ import { CreateUserDto } from '#users/dto/create-user.dto';
 import { UserResponseDto } from '#users/dto/user-response.dto';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signin.dto';
+import { SignInResponseDto } from './dto/signin-response.dto';
 
 @Controller({
   version: '1',
@@ -27,6 +28,6 @@ export class AuthController {
   signIn(@Body() signInDto: SignInDto) {
     var user = this.authService.signIn(signInDto);
 
-    return plainToInstance(UserResponseDto, user);
+    return plainToInstance(SignInResponseDto, user);
   }
 }

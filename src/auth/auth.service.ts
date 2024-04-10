@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-// import { JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '#users/users.service';
 import { HelperService } from '#helper/helper.service';
 import { SignInDto } from './dto/signin.dto';
@@ -8,7 +8,8 @@ import { SignInDto } from './dto/signin.dto';
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly helperService: HelperService, // private readonly jwtService: JwtService,
+    private readonly helperService: HelperService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async signIn(signInDto: SignInDto) {
@@ -20,6 +21,8 @@ export class AuthService {
 
     if (!isPasswordMatch) throw new UnauthorizedException('Incorrect password');
 
-    return user;
+    var payload = { sub: user.id };
+
+    return { accessToken: await this.jwtService.signAsync(payload) };
   }
 }
