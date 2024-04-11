@@ -18,16 +18,16 @@ export class User extends AbstractEntity {
   })
   username: string;
 
-  @Column('varchar', { length: 200 })
+  @Column('varchar', { length: 200, nullable: true })
   @IsOptional()
   @IsString()
   @Length(0, 200, { message: `'about' should have maximum 200 characters` })
-  about: string = "Haven't said anything about myself yet";
+  about: string;
 
   @Column()
   @IsOptional()
   @IsUrl({}, { message: `'avatar' should be a valid link to the image` })
-  avatar: string = `https://i.pravatar.cc/200/?img=${Math.floor(Math.random() * 70) + 1}`;
+  avatar: string;
 
   @Column({ unique: true })
   @IsEmail({}, { message: `'email' should be a valid email` })

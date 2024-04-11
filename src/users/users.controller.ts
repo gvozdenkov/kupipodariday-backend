@@ -1,7 +1,10 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import { Controller, Get, Body, Param, Query, Req, UseGuards, Patch } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { JwtAuthGuard } from '#auth/guard/jwt-auth.guard';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-// import { UpdateUserDto } from './dto/update-user.dto';
+import { UserResponseDto } from './dto/user-response.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller({
   version: '1',
@@ -10,18 +13,27 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
-
   @Get()
   findByFilter(@Query('email') email?: string, @Query('username') username?: string) {
     return this.usersService.findByFilter({ email, username });
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  findMe(@Req() req: { user: User }) {
+    return plainToInstance(UserResponseDto, req.user);
+  }
+
   @Get(':username')
   findByUsername(@Param('username') username: string) {
     return this.usersService.findByUsername(username);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('me')
+  async update(@Body() updateUserDto: UpdateUserDto, @Req() req: { user: User }) {
+    var user = await this.usersService.update(req.user.id, updateUserDto);
+
+    return plainToInstance(UserResponseDto, user);
   }
 }

@@ -15,8 +15,8 @@ export class UsersService {
     private readonly helperService: HelperService,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
-    var { email, username, password } = createUserDto;
+  async register(createUserDto: CreateUserDto) {
+    var { email, username, password, avatar, about } = createUserDto;
 
     var user = await this.userRepository.findOneBy([{ username }, { email }]);
 
@@ -33,23 +33,41 @@ export class UsersService {
 
     var hashedPassword = await this.helperService.hash(password);
 
-    return await this.userRepository.save({ ...createUserDto, password: hashedPassword });
+    var userAvatar =
+      avatar || `https://i.pravatar.cc/200/?img=${Math.floor(Math.random() * 70) + 1}`;
+
+    var userAbout = about || "Haven't said anything about myself yet";
+
+    return await this.userRepository.save({
+      ...createUserDto,
+      password: hashedPassword,
+      avatar: userAvatar,
+      about: userAbout,
+    });
   }
 
-  async update(updateUserDto: UpdateUserDto) {
-    var { password } = updateUserDto;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    var user = await this.findById(id);
 
-    if (password) {
-      var hashedPassword = await this.helperService.hash(password);
+    var { username, about, avatar, email, password } = updateUserDto;
 
-      return this.userRepository.save({
-        ...updateUserDto,
-        password: hashedPassword,
-      });
-    }
+    var hashedPassword = password && (await this.helperService.hash(password));
+
+    var isUsernameEsists = username && (await this.userRepository.findOneBy({ username }));
+
+    var isEmailEsists = email && (await this.userRepository.findOneBy({ email }));
+
+    if (isUsernameEsists)
+      throw new ConflictException(`User with '${username}' username already exists`);
+
+    if (isEmailEsists) throw new ConflictException(`User with '${email}' email already exists`);
 
     return this.userRepository.save({
+      ...user,
       ...updateUserDto,
+      password: hashedPassword || user.password,
+      avatar: avatar || user.avatar,
+      about: about || user.about,
     });
   }
 

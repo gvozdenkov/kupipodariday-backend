@@ -19,15 +19,15 @@ export class AuthController {
   ) {}
 
   @Post('signup')
-  async create(@Body() createUserDto: CreateUserDto) {
-    var user = await this.usersService.create(createUserDto);
+  async register(@Body() createUserDto: CreateUserDto) {
+    var user = await this.usersService.register(createUserDto);
 
     return plainToInstance(UserResponseDto, user);
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('signin')
-  async SignIn(@Req() req: { user: User }) {
+  async login(@Req() req: { user: User }) {
     var res = await this.authService.login(req.user);
 
     return plainToInstance(SignInResponseDto, res);
