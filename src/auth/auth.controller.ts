@@ -1,11 +1,12 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import { User } from '#users/entities/user.entity';
 import { UsersService } from '#users/users.service';
 import { CreateUserDto } from '#users/dto/create-user.dto';
 import { UserResponseDto } from '#users/dto/user-response.dto';
 import { AuthService } from './auth.service';
-import { SignInDto } from './dto/signin.dto';
 import { SignInResponseDto } from './dto/signin-response.dto';
+import { LocalAuthGuard } from './guard/local-auth.guard';
 
 @Controller({
   version: '1',
@@ -24,10 +25,11 @@ export class AuthController {
     return plainToInstance(UserResponseDto, user);
   }
 
+  @UseGuards(LocalAuthGuard)
   @Post('signin')
-  signIn(@Body() signInDto: SignInDto) {
-    var user = this.authService.signIn(signInDto);
+  async SignIn(@Req() req: { user: User }) {
+    var res = await this.authService.login(req.user);
 
-    return plainToInstance(SignInResponseDto, user);
+    return plainToInstance(SignInResponseDto, res);
   }
 }

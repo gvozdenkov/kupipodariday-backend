@@ -77,4 +77,12 @@ export class UsersService {
 
     return user;
   }
+
+  async findById(id: string) {
+    var user = await this.userRepository.findOneBy({ id });
+
+    if (!user) throw new NotFoundException(`user with '${id}' id not found`);
+
+    return user;
+  }
 }
