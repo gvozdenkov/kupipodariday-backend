@@ -1,7 +1,6 @@
 import { Controller, Get, Body, Param, Query, Req, UseGuards, Patch } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { JwtAuthGuard } from '#auth/guard/jwt-auth.guard';
-import { WishService } from '#wish/wish.service';
 import { WishOwnResponseDto } from '#wish/dto/wish-own-response.dto';
 import { WishResponseDto } from '#wish/dto/wish-response.dto';
 import { User } from './entities/user.entity';
@@ -16,10 +15,7 @@ import { UserPublicProfileResponseDto } from './dto/user-public-profile-response
   path: 'users',
 })
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly wishService: WishService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Get()
   async findByFilter(@Query('email') email?: string, @Query('username') username?: string) {
