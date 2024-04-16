@@ -1,75 +1,102 @@
-import { Repository } from 'typeorm';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '#users/entities/user.entity';
+import { Wish } from './entities/wish.entity';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
-import { Wish } from './entities/wish.entity';
 
 @Injectable()
 export class WishService {
-  private last: number;
-
-  private top: number;
-
   constructor(
     @InjectRepository(Wish)
     private readonly wishRepository: Repository<Wish>,
-  ) {
-    this.last = 40;
-    this.top = 20;
+  ) {}
+
+  async create(owner: User, createWishDto: CreateWishDto) {
+    var newWish = this.wishRepository.create({ ...createWishDto, owner });
+
+    return await this.wishRepository.save(newWish);
   }
 
-  create(createWishDto: CreateWishDto) {
-    var newWish = this.wishRepository.create(createWishDto);
+  async findOne(query: FindOneOptions<Wish>) {
+    var wish = await this.wishRepository.findOne(query);
 
-    return this.wishRepository.save(newWish);
-  }
-
-  findLast() {
-    return this.wishRepository.find({
-      order: { createdAt: 'DESC' },
-      take: this.last,
-    });
-  }
-
-  findTop() {
-    return this.wishRepository.find({
-      order: { copied: 'DESC' },
-      take: this.top,
-    });
-  }
-
-  async findById(id: string) {
-    var wish = await this.wishRepository.findOneBy({ id });
-
-    if (!wish) throw new NotFoundException(`Wish with '${id}' not found`);
+    if (!wish) throw new NotFoundException(`Wish not found`);
 
     return wish;
   }
 
+  async findMany(query: FindManyOptions<Wish>) {
+    return (await this.wishRepository.find(query)) || [];
+  }
+
   async update(id: string, updateWishDto: UpdateWishDto) {
-    var wish = await this.findById(id);
+    var wish = await this.findOne({ where: { id } });
+
+    var isHasOffers = wish.raised !== 0;
 
     var { link, price } = updateWishDto;
 
-    if (wish.raised !== 0 && (link || price))
+    if (isHasOffers && !!(link || price))
       throw new BadRequestException(
-        'You cannot change a wish for which money has already been deposited',
+        "You cannot edit a wish 'link' and 'price' for which there are already offers",
       );
 
-    return this.wishRepository.save({
-      ...wish,
+    return this.wishRepository.update(wish.id, {
       ...updateWishDto,
     });
   }
 
-  async remove(id: string) {
-    var wish = await this.findById(id);
+  async updateRaised(wishId: string, offerAmount: number) {
+    var wish = await this.wishRepository.findOne({
+      where: { id: wishId },
+      relations: ['offers'],
+    });
 
-    if (!wish) throw new NotFoundException(`Wish with '${id}' not found`);
+    if (wish.price === wish.raised)
+      throw new ForbiddenException('Funds for this wish have already been raised');
 
-    await this.wishRepository.delete({ id });
+    var remains = wish.price - wish.raised;
 
-    return wish;
+    if (offerAmount > remains)
+      throw new ForbiddenException(
+        'You cannot deposit more money than remains to be deposited for this wish',
+      );
+
+    return await this.wishRepository.update(wish.id, {
+      raised: wish.raised + offerAmount,
+    });
+  }
+
+  async updateCopied(wish: Wish) {
+    return await this.wishRepository.update(wish.id, {
+      copied: wish.copied + 1,
+    });
+  }
+
+  async removeOne(id: string) {
+    var wish = await this.findOne({
+      where: { id },
+      relations: ['owner', 'offers', 'wishlists'],
+    });
+
+    return await this.wishRepository.remove(wish);
+  }
+
+  // helpers
+  async isOwner(wishId: string, userId: string) {
+    var wish = await this.findOne({
+      where: { id: wishId },
+      select: { id: true },
+      relations: ['owner'],
+    });
+
+    return wish.owner.id === userId;
   }
 }

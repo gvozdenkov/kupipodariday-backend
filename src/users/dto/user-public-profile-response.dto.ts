@@ -2,7 +2,7 @@ import { User } from '#users/entities/user.entity';
 import { PickType } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-export class UserResponseDto extends PickType(User, [
+export class UserPublicProfileResponseDto extends PickType(User, [
   'id',
   'username',
   'about',
@@ -22,9 +22,6 @@ export class UserResponseDto extends PickType(User, [
 
   @Expose()
   avatar: string;
-
-  @Expose()
-  email: string;
 
   @Expose()
   createdAt: Date;

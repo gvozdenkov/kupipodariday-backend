@@ -10,7 +10,7 @@ export class Wishlist extends AbstractEntity {
   @Column('varchar', { length: 250 })
   @IsString()
   @Length(2, 250, { message: `'title' should have minium 2 and maximum 64 characters` })
-  title: string = 'New Wishlist';
+  title: string;
 
   @Column('varchar', { length: 1500, nullable: true })
   @IsString()
@@ -21,10 +21,10 @@ export class Wishlist extends AbstractEntity {
   @Column()
   @IsOptional()
   @IsUrl({}, { message: `'cover' should be a valid link to the wishlist cover` })
-  cover: string = `https://placehold.jp/b0b0b0/ffffff/200x200.png?text=New%20Wishlist`;
+  cover: string;
 
   // Wish located in many Wishlists, Each Wishlist contains many Wises
-  @ManyToMany(() => Wish, (wish) => wish.wishlists)
+  @ManyToMany(() => Wish, (wish) => wish.wishlists, { onUpdate: 'CASCADE' })
   items: Wish[];
 
   // Many WishList can belong to unique user

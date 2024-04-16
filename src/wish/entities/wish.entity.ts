@@ -64,10 +64,12 @@ export class Wish extends AbstractEntity {
   owner: Relation<User>;
 
   // Many Offers for one Wish
-  @OneToMany(() => Offer, (offer) => offer.item)
-  offers: Relation<Offer[]>;
+  @OneToMany(() => Offer, (offer) => offer.item, {
+    onDelete: 'CASCADE',
+  })
+  offers: Offer[];
 
   @ManyToMany(() => Wishlist, (wishlist) => wishlist.items)
   @JoinTable()
-  wishlists: Relation<Wishlist[]>;
+  wishlists: Wishlist[];
 }

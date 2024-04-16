@@ -20,13 +20,15 @@ export class AuthService {
   }
 
   async validateUser(signInDto: SignInDto) {
-    var user = await this.usersService.findByEmail(signInDto.email);
+    var { email, password } = signInDto;
 
-    var isPasswordMatch = await this.helperService.compare(signInDto.password, user.password);
+    var user = await this.usersService.findOne({ where: { email } });
+
+    var isPasswordMatch = await this.helperService.compare(password, user.password);
 
     if (!isPasswordMatch) throw new UnauthorizedException('Incorrect password');
 
-    var { password, ...result } = user;
+    var { password: removedPassword, ...result } = user;
 
     return result;
   }

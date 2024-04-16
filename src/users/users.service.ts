@@ -1,10 +1,9 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { HelperService } from '#helper/helper.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
-import { FindUserByFilterDto } from './dto/find-user-by-filter.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
@@ -47,7 +46,7 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    var user = await this.findById(id);
+    var user = await this.findOne({ where: { id } });
 
     var { username, about, avatar, email, password } = updateUserDto;
 
@@ -71,35 +70,10 @@ export class UsersService {
     });
   }
 
-  async findByFilter(findUserByFilterDto: FindUserByFilterDto) {
-    var { email, username } = findUserByFilterDto;
-    var user = await this.userRepository.findOne({ where: { email, username } });
+  async findOne(query: FindOneOptions<User>) {
+    var user = await this.userRepository.findOne(query);
 
     if (!user) throw new NotFoundException(`User not found`);
-
-    return user;
-  }
-
-  async findByUsername(username: string) {
-    var user = await this.userRepository.findOneBy({ username });
-
-    if (!user) throw new NotFoundException(`user with '${username}' username not found`);
-
-    return user;
-  }
-
-  async findByEmail(email: string) {
-    var user = await this.userRepository.findOneBy({ email });
-
-    if (!user) throw new NotFoundException(`user with '${email}' email not found`);
-
-    return user;
-  }
-
-  async findById(id: string) {
-    var user = await this.userRepository.findOneBy({ id });
-
-    if (!user) throw new NotFoundException(`user with '${id}' id not found`);
 
     return user;
   }

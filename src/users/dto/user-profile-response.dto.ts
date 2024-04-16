@@ -2,7 +2,7 @@ import { User } from '#users/entities/user.entity';
 import { PickType } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-export class UserResponseDto extends PickType(User, [
+export class UserProfileResponseDto extends PickType(User, [
   'id',
   'username',
   'about',

@@ -1,32 +1,65 @@
 import { Controller, Get, Body, Param, Query, Req, UseGuards, Patch } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { JwtAuthGuard } from '#auth/guard/jwt-auth.guard';
+import { WishService } from '#wish/wish.service';
+import { WishOwnResponseDto } from '#wish/dto/wish-own-response.dto';
+import { WishResponseDto } from '#wish/dto/wish-response.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserProfileResponseDto } from './dto/user-profile-response.dto';
+import { UserPublicProfileResponseDto } from './dto/user-public-profile-response.dto';
 
 @Controller({
   version: '1',
   path: 'users',
 })
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly wishService: WishService,
+  ) {}
 
   @Get()
-  findByFilter(@Query('email') email?: string, @Query('username') username?: string) {
-    return this.usersService.findByFilter({ email, username });
+  async findByFilter(@Query('email') email?: string, @Query('username') username?: string) {
+    var user = await this.usersService.findOne({ where: { email, username } });
+
+    return plainToInstance(UserPublicProfileResponseDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
   findMe(@Req() req: { user: User }) {
-    return plainToInstance(UserResponseDto, req.user);
+    return plainToInstance(UserProfileResponseDto, req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me/wishes')
+  async findMeWishes(@Req() req: { user: User }) {
+    var user = await this.usersService.findOne({
+      where: { id: req.user.id },
+      relations: ['wishes'],
+    });
+
+    return plainToInstance(WishOwnResponseDto, user.wishes);
   }
 
   @Get(':username')
-  findByUsername(@Param('username') username: string) {
-    return this.usersService.findByUsername(username);
+  async findByUsername(@Param('username') username: string) {
+    var user = await this.usersService.findOne({ where: { username } });
+
+    return plainToInstance(UserPublicProfileResponseDto, user);
+  }
+
+  @Get(':username/wishes')
+  async getUserWishes(@Param('username') username: string) {
+    var user = await this.usersService.findOne({
+      where: { username },
+      relations: ['wishes'],
+    });
+
+    return plainToInstance(WishResponseDto, user.wishes);
   }
 
   @UseGuards(JwtAuthGuard)

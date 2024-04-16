@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { Wish } from '#wish/entities/wish.entity';
+import { User } from '#users/entities/user.entity';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
 import { Wishlist } from './entities/wishlist.entity';
@@ -11,60 +12,72 @@ export class WishlistService {
   constructor(
     @InjectRepository(Wishlist)
     private readonly wishListRepository: Repository<Wishlist>,
-    @InjectRepository(Wish)
-    private wishRepository: Repository<Wish>,
   ) {}
 
-  async create(createWishlistDto: CreateWishlistDto) {
-    var { items } = createWishlistDto;
+  async create(createWishlistDto: CreateWishlistDto, user: User, wishes?: Wish[]) {
+    var cover =
+      createWishlistDto.cover ||
+      `https://placehold.jp/b0b0b0/ffffff/200x200.png?text=New%20Wishlist`;
 
-    var wishes = await this.wishRepository.findBy({ id: In(items) });
+    var title = createWishlistDto.title || 'New Wishlist';
 
-    var wishList = this.wishListRepository.create({ ...createWishlistDto, items: wishes });
-
-    return this.wishListRepository.save(wishList);
-  }
-
-  findAll(page: number, pageSize: number) {
-    return this.wishListRepository.findAndCount({
-      take: pageSize,
-      skip: pageSize * (page - 1),
-      relations: ['owner', 'items'],
-    });
-  }
-
-  async findById(id: string) {
-    var wishlist = await this.wishListRepository.findOne({
-      where: { id },
-      relations: ['items'],
+    var newWishlist = this.wishListRepository.create({
+      ...createWishlistDto,
+      cover,
+      title,
+      owner: user,
+      items: wishes || [],
     });
 
-    if (!wishlist) throw new NotFoundException(`Wishlist with '${id}' not found`);
+    return await this.wishListRepository.save(newWishlist);
+  }
+
+  async findOne(query: FindOneOptions<Wishlist>) {
+    var wishlist = await this.wishListRepository.findOne(query);
+
+    if (!wishlist) throw new NotFoundException(`Wishlist not found`);
 
     return wishlist;
   }
 
-  async update(id: string, updateWishlistDto: UpdateWishlistDto) {
-    var wishList = await this.findById(id);
-
-    var { title, description, cover, items } = updateWishlistDto;
-
-    var newWishes = items?.length && (await this.wishRepository.findBy({ id: In(items) }));
-
-    return this.wishListRepository.save({
-      ...wishList,
-      title,
-      description,
-      cover,
-      items: newWishes && [...newWishes],
-    });
+  async findMany(query: FindManyOptions<Wishlist>) {
+    return (await this.wishListRepository.find(query)) || [];
   }
 
-  async remove(id: string) {
-    var wishList = await this.findById(id);
+  async updateOne(id: string, updateWishlistDto: UpdateWishlistDto, wishes: Wish[]) {
+    var wishlist = await this.findOne({
+      where: { id },
+      relations: ['items'],
+    });
 
-    await this.wishListRepository.delete({ id });
+    var updatedWishlist = {
+      ...wishlist,
+      title: updateWishlistDto.title || wishlist.title,
+      description: updateWishlistDto.description || wishlist.description,
+      cover: updateWishlistDto.cover || wishlist.cover,
+      items: wishes || wishlist.items,
+    };
 
-    return wishList;
+    return await this.wishListRepository.save(updatedWishlist);
+  }
+
+  async removeOne(id: string) {
+    var wishlist = await this.findOne({
+      where: { id },
+      relations: ['owner', 'items'],
+    });
+
+    return await this.wishListRepository.remove(wishlist);
+  }
+
+  // helpers
+  async isOwner(wishlistId: string, userId: string) {
+    var wishlist = await this.findOne({
+      where: { id: wishlistId },
+      select: { id: true },
+      relations: ['owner'],
+    });
+
+    return wishlist.owner.id === userId;
   }
 }
