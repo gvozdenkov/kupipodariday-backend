@@ -5,7 +5,7 @@ export class CreateWishResponseDto {
   id: string;
 
   @Expose()
-  title: string;
+  name: string;
 
   @Expose()
   description: string;

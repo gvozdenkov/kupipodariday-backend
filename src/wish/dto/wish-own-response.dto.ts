@@ -5,7 +5,7 @@ import { Expose, Type } from 'class-transformer';
 
 export class WishOwnResponseDto extends PickType(Wish, [
   'id',
-  'title',
+  'name',
   'description',
   'image',
   'link',
@@ -17,7 +17,7 @@ export class WishOwnResponseDto extends PickType(Wish, [
   id: string;
 
   @Expose()
-  title: string;
+  name: string;
 
   @Expose()
   description: string;
@@ -42,8 +42,8 @@ export class WishOwnResponseDto extends PickType(Wish, [
   offers: OfferResponseDto[];
 
   @Expose()
-  createdAt;
+  createdAt: Date;
 
   @Expose()
-  updatedAt;
+  updatedAt: Date;
 }

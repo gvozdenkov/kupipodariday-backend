@@ -7,7 +7,7 @@ export class ResponseFeedDto {
   id: string;
 
   @Expose()
-  title: string;
+  name: string;
 
   @Expose()
   price: number;

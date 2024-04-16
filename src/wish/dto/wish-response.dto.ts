@@ -8,7 +8,7 @@ export class WishResponseDto {
   id: string;
 
   @Expose()
-  title: string;
+  name: string;
 
   @Expose()
   description: string;
@@ -31,8 +31,8 @@ export class WishResponseDto {
   owner: UserResponseDto[];
 
   @Expose()
-  createdAt;
+  createdAt: Date;
 
   @Expose()
-  updatedAt;
+  updatedAt: Date;
 }

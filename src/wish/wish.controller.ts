@@ -125,7 +125,7 @@ export class WishController {
     await this.wishService.updateCopied(wish);
 
     await this.wishService.create(req.user, {
-      title: wish.title,
+      name: wish.name,
       link: wish.link,
       image: wish.image,
       price: wish.price,
