@@ -241,7 +241,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Wish'
+                $ref: '#/components/schemas/WishById'
       security:
         - bearerAuth: []
     delete:
@@ -611,6 +611,32 @@ components:
           type: boolean
         user:
           $ref: '#/components/schemas/User'
+    OfferResponseDto:
+      required:
+        - amount
+        - createdAt
+        - hidden
+        - id
+        - item
+        - updatedAt
+        - user
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        amount:
+          type: number
+        hidden:
+          type: boolean
+        user:
+          $ref: '#/components/schemas/UserPublicProfileResponseDto'
     WishPartial:
       type: object
       properties:
@@ -741,6 +767,55 @@ components:
           type: string
         owner:
           $ref: '#/components/schemas/UserPublicProfileResponseDto'
+    WishById:
+      required:
+        - copied
+        - createdAt
+        - description
+        - id
+        - image
+        - link
+        - name
+        - offers
+        - owner
+        - price
+        - raised
+        - updatedAt
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        name:
+          maxLength: 250
+          minLength: 1
+          type: string
+        link:
+          type: string
+        image:
+          type: string
+        price:
+          minimum: 1
+          type: number
+        raised:
+          minimum: 1
+          type: number
+        copied:
+          type: number
+        description:
+          maxLength: 1024
+          minLength: 1
+          type: string
+        owner:
+          $ref: '#/components/schemas/UserPublicProfileResponseDto'
+        offers:
+          $ref: '#/components/schemas/OfferResponseDto'
     MeWishFeed:
       required:
         - copied

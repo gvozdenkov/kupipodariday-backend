@@ -69,7 +69,7 @@ export class WishController {
 
     var wish = await this.wishService.findOne({
       where: { id },
-      relations: ['owner', 'offers'],
+      relations: ['owner', 'offers.user'],
     });
 
     if (isOwner) {

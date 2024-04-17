@@ -1,8 +1,8 @@
 /* eslint-disable import/no-cycle */
 import { Expose, Type } from 'class-transformer';
 import type { Relation } from 'typeorm';
-import { UserResponseDto } from '#users/dto/user-response.dto';
 import { WishResponseDto } from '#wish/dto/wish-response.dto';
+import { UserPublicProfileResponseDto } from '#users/dto/user-public-profile-response.dto';
 
 export class OfferResponseDto {
   @Expose()
@@ -18,9 +18,9 @@ export class OfferResponseDto {
   @Expose()
   hidden: boolean;
 
-  @Type(() => UserResponseDto)
+  @Type(() => UserPublicProfileResponseDto)
   @Expose()
-  user: UserResponseDto;
+  user: UserPublicProfileResponseDto;
 
   @Expose()
   createdAt: Date;
