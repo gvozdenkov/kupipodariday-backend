@@ -90,7 +90,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Wish'
+                  $ref: '#/components/schemas/MeWishFeed'
       security:
         - bearerAuth: []
   /users/{username}:
@@ -140,17 +140,21 @@ paths:
       security:
         - bearerAuth: []
   /users/find:
-    post:
+    get:
       tags:
         - users
       operationId: UsersController_findMany
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FindUsersDto'
-        required: true
+      parameters:
+        - name: username
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: email
+          in: query
+          required: false
+          schema:
+            type: email
       responses:
         '201':
           description: ''
@@ -229,7 +233,8 @@ paths:
           style: simple
           explode: false
           schema:
-            type: number
+            type: string
+            format: uuid
       responses:
         '200':
           description: ''
@@ -250,7 +255,8 @@ paths:
           style: simple
           explode: false
           schema:
-            type: number
+            type: string
+            format: uuid
       responses:
         '200':
           description: ''
@@ -271,7 +277,8 @@ paths:
           style: simple
           explode: false
           schema:
-            type: number
+            type: string
+            format: uuid
       requestBody:
         content:
           application/json:
@@ -295,7 +302,8 @@ paths:
           style: simple
           explode: false
           schema:
-            type: number
+            type: string
+            format: uuid
       responses:
         '201':
           description: ''
@@ -355,6 +363,7 @@ paths:
           explode: false
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: ''
@@ -410,7 +419,8 @@ paths:
           style: simple
           explode: false
           schema:
-            type: number
+            type: string
+            format: uuid
       responses:
         '200':
           description: ''
@@ -431,7 +441,8 @@ paths:
           style: simple
           explode: false
           schema:
-            type: number
+            type: string
+            format: uuid
       responses:
         '200':
           description: ''
@@ -452,7 +463,8 @@ paths:
           style: simple
           explode: false
           schema:
-            type: number
+            type: string
+            format: uuid
       requestBody:
         content:
           application/json:
@@ -729,6 +741,51 @@ components:
           type: string
         owner:
           $ref: '#/components/schemas/UserPublicProfileResponseDto'
+    MeWishFeed:
+      required:
+        - copied
+        - createdAt
+        - description
+        - id
+        - image
+        - link
+        - name
+        - offers
+        - owner
+        - price
+        - raised
+        - updatedAt
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        name:
+          maxLength: 250
+          minLength: 1
+          type: string
+        link:
+          type: string
+        image:
+          type: string
+        price:
+          minimum: 1
+          type: number
+        raised:
+          minimum: 1
+          type: number
+        copied:
+          type: number
+        description:
+          maxLength: 1024
+          minLength: 1
+          type: string
     Wishlist:
       required:
         - id
@@ -891,10 +948,6 @@ components:
           maxLength: 1024
           minLength: 1
           type: string
-        offers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Offer'
     FindUsersDto:
       required:
         - query

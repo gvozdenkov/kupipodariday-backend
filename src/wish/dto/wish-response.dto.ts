@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { Expose, Type } from 'class-transformer';
 import { OfferResponseDto } from '#offer/dto/offer-response.dto';
-import { UserResponseDto } from '#users/dto/user-response.dto';
+import { UserPublicProfileResponseDto } from '#users/dto/user-public-profile-response.dto';
 
 export class WishResponseDto {
   @Expose()
@@ -26,9 +26,9 @@ export class WishResponseDto {
   @Expose()
   offers: OfferResponseDto[];
 
-  @Type(() => UserResponseDto)
+  @Type(() => UserPublicProfileResponseDto)
   @Expose()
-  owner: UserResponseDto[];
+  owner: UserPublicProfileResponseDto;
 
   @Expose()
   createdAt: Date;

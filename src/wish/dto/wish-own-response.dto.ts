@@ -1,4 +1,5 @@
 import { OfferResponseDto } from '#offer/dto/offer-response.dto';
+import { UserPublicProfileResponseDto } from '#users/dto/user-public-profile-response.dto';
 import { Wish } from '#wish/entities/wish.entity';
 import { PickType } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
@@ -40,6 +41,10 @@ export class WishOwnResponseDto extends PickType(Wish, [
   @Type(() => OfferResponseDto)
   @Expose()
   offers: OfferResponseDto[];
+
+  @Type(() => UserPublicProfileResponseDto)
+  @Expose()
+  owner: UserPublicProfileResponseDto;
 
   @Expose()
   createdAt: Date;
