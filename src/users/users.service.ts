@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { HelperService } from '#helper/helper.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
@@ -76,5 +76,11 @@ export class UsersService {
     if (!user) throw new NotFoundException(`User not found`);
 
     return user;
+  }
+
+  async findMany(query: FindManyOptions<User>) {
+    var users = await this.userRepository.find(query);
+
+    return users || [];
   }
 }
