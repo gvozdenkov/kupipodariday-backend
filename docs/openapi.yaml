@@ -33,8 +33,8 @@ tags:
     description: Operations with users
   - name: offers
     description: Operations with offers
-  - name: wishlistlists
-    description: Operations with wishlistlists
+  - name: wishlists
+    description: Operations with wishlists
   - name: auth
     description: auth operations
 
@@ -364,10 +364,10 @@ paths:
                 $ref: '#/components/schemas/Offer'
       security:
         - bearerAuth: []
-  /wishlistlists:
+  /wishlists:
     get:
       tags:
-        - wishlistlists
+        - wishlists
       operationId: WishlistsController_findAll
       responses:
         '200':
@@ -380,7 +380,7 @@ paths:
                   $ref: '#/components/schemas/Wishlist'
     post:
       tags:
-        - wishlistlists
+        - wishlists
       operationId: WishlistsController_create
       parameters: []
       requestBody:
@@ -398,10 +398,10 @@ paths:
                 $ref: '#/components/schemas/Wishlist'
       security:
         - bearerAuth: []
-  /wishlistlists/{id}:
+  /wishlists/{id}:
     get:
       tags:
-        - wishlistlists
+        - wishlists
       operationId: WishlistsController_findOne
       parameters:
         - name: id
@@ -422,7 +422,7 @@ paths:
         - bearerAuth: []
     delete:
       tags:
-        - wishlistlists
+        - wishlists
       operationId: WishlistsController_removeOne
       parameters:
         - name: id
@@ -443,7 +443,7 @@ paths:
         - bearerAuth: []
     patch:
       tags:
-        - wishlistlists
+        - wishlists
       operationId: WishlistsController_update
       parameters:
         - name: id
@@ -468,7 +468,7 @@ paths:
                 $ref: '#/components/schemas/Wishlist'
       security:
         - bearerAuth: []
-  /signin:
+  /auth/signin:
     post:
       tags:
         - auth
@@ -489,7 +489,7 @@ paths:
                 $ref: '#/components/schemas/SigninUserResponseDto'
         '401':
           description: Некорректная пара логин и пароль
-  /signup:
+  /auth/signup:
     post:
       tags:
         - auth
@@ -639,7 +639,7 @@ components:
         - id
         - image
         - link
-        - title
+        - name
         - offers
         - owner
         - price
@@ -656,7 +656,7 @@ components:
         updatedAt:
           type: string
           format: date-time
-        title:
+        name:
           maxLength: 250
           minLength: 1
           type: string
@@ -685,7 +685,7 @@ components:
     Wishlist:
       required:
         - id
-        - title
+        - name
         - items
         - owner
         - createdAt
@@ -701,7 +701,7 @@ components:
         updatedAt:
           type: string
           format: date-time
-        title:
+        name:
           maxLength: 250
           minLength: 0
           type: string
@@ -808,7 +808,7 @@ components:
         - id
         - image
         - link
-        - title
+        - name
         - offers
         - price
         - raised
@@ -824,7 +824,7 @@ components:
         updatedAt:
           type: string
           format: date-time
-        title:
+        name:
           maxLength: 250
           minLength: 1
           type: string
@@ -862,11 +862,11 @@ components:
         - description
         - image
         - link
-        - title
+        - name
         - price
       type: object
       properties:
-        title:
+        name:
           maxLength: 250
           minLength: 1
           type: string
@@ -904,7 +904,7 @@ components:
     CreateWishlistDto:
       type: object
       properties:
-        title:
+        name:
           type: string
           example: New Wishlist
         cover:
@@ -918,7 +918,7 @@ components:
     UpdateWishlistDto:
       type: object
       properties:
-        title:
+        name:
           type: string
           example: Мой вишлист
         cover:
