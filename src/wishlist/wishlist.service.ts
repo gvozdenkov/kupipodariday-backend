@@ -19,12 +19,12 @@ export class WishlistService {
       createWishlistDto.cover ||
       `https://placehold.jp/b0b0b0/ffffff/200x200.png?text=New%20Wishlist`;
 
-    var title = createWishlistDto.title || 'New Wishlist';
+    var name = createWishlistDto.name || 'New Wishlist';
 
     var newWishlist = this.wishListRepository.create({
       ...createWishlistDto,
       cover,
-      title,
+      name,
       owner: user,
       items: wishes || [],
     });
@@ -52,7 +52,7 @@ export class WishlistService {
 
     var updatedWishlist = {
       ...wishlist,
-      title: updateWishlistDto.title || wishlist.title,
+      name: updateWishlistDto.name || wishlist.name,
       description: updateWishlistDto.description || wishlist.description,
       cover: updateWishlistDto.cover || wishlist.cover,
       items: wishes || wishlist.items,

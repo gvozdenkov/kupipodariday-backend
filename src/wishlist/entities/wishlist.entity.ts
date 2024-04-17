@@ -9,8 +9,8 @@ import { Wish } from '#wish/entities/wish.entity';
 export class Wishlist extends AbstractEntity {
   @Column('varchar', { length: 250 })
   @IsString()
-  @Length(2, 250, { message: `'title' should have minium 2 and maximum 64 characters` })
-  title: string;
+  @Length(2, 250, { message: `'name' should have minium 2 and maximum 64 characters` })
+  name: string;
 
   @Column('varchar', { length: 1500, nullable: true })
   @IsString()
