@@ -197,7 +197,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Wish'
+                  $ref: '#/components/schemas/WishFeed'
       security:
         - bearerAuth: []
   /wishes/top:
@@ -214,7 +214,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Wish'
+                  $ref: '#/components/schemas/WishFeed'
       security:
         - bearerAuth: []
   /wishes/{id}:
@@ -682,6 +682,53 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Offer'
+    WishFeed:
+      required:
+        - copied
+        - createdAt
+        - description
+        - id
+        - image
+        - link
+        - name
+        - offers
+        - owner
+        - price
+        - raised
+        - updatedAt
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        name:
+          maxLength: 250
+          minLength: 1
+          type: string
+        link:
+          type: string
+        image:
+          type: string
+        price:
+          minimum: 1
+          type: number
+        raised:
+          minimum: 1
+          type: number
+        copied:
+          type: number
+        description:
+          maxLength: 1024
+          minLength: 1
+          type: string
+        owner:
+          $ref: '#/components/schemas/UserPublicProfileResponseDto'
     Wishlist:
       required:
         - id

@@ -40,7 +40,7 @@ export class WishController {
   @Get('last')
   async findLast() {
     var wishes = await this.wishService.findMany({
-      relations: ['owner', 'offers'],
+      relations: ['owner'],
       order: { createdAt: 'DESC' },
       take: 40,
     });
@@ -51,7 +51,7 @@ export class WishController {
   @Get('top')
   async findTop() {
     var wishes = await this.wishService.findMany({
-      relations: ['owner', 'offers'],
+      relations: ['owner'],
       order: { copied: 'DESC' },
       take: 20,
     });
