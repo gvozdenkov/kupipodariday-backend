@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { User } from '#users/entities/user.entity';
 import { Wish } from '#wish/entities/wish.entity';
 import { CreateOfferDto } from './dto/create-offer.dto';
@@ -24,28 +24,14 @@ export class OfferService {
     });
   }
 
-  async findAll() {
-    return await this.offerRepository.find({
-      where: {
-        hidden: false,
-      },
-      relations: {
-        item: true,
-        user: true,
-      },
-    });
+  async findMany(query: FindManyOptions<Offer>) {
+    return (await this.offerRepository.find(query)) || [];
   }
 
-  async findById(id: string) {
-    var offer = await this.offerRepository.findOne({
-      where: { id },
-      relations: {
-        item: true,
-        user: true,
-      },
-    });
+  async findOne(query: FindOneOptions<Offer>) {
+    var offer = await this.offerRepository.findOne(query);
 
-    if (!offer) throw new NotFoundException(`Offer with '${id}' not found`);
+    if (!offer) throw new NotFoundException(`Offer not found`);
 
     return offer;
   }
