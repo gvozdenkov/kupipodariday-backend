@@ -22,6 +22,9 @@ export class WishResponseDto {
   @Expose()
   price: number;
 
+  @Expose()
+  raised: number;
+
   @Type(() => OfferResponseDto)
   @Expose()
   offers: OfferResponseDto[];
