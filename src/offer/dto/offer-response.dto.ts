@@ -10,7 +10,7 @@ export class OfferResponseDto {
 
   @Type(() => WishResponseDto)
   @Expose()
-  item: Relation<WishResponseDto>;
+  wish: Relation<WishResponseDto>;
 
   @Expose()
   amount: number;

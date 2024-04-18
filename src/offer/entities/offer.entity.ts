@@ -30,5 +30,5 @@ export class Offer extends AbstractEntity {
 
   // Many Offers belong to unique Wish
   @ManyToOne(() => Wish, (wish) => wish.offers)
-  item: Relation<Wish>;
+  wish: Relation<Wish>;
 }

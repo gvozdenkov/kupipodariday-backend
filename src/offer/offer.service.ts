@@ -18,7 +18,7 @@ export class OfferService {
 
     return await this.offerRepository.save({
       user,
-      item: wish,
+      wish,
       amount,
       hidden,
     });

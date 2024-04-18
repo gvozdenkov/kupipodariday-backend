@@ -50,7 +50,7 @@ export class OfferController {
   async findAll() {
     var offers = await this.offerService.findMany({
       where: { hidden: false },
-      relations: ['item', 'user'],
+      relations: ['wish', 'user'],
     });
 
     return plainToInstance(OfferResponseDto, offers);
@@ -61,7 +61,7 @@ export class OfferController {
   async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     var offer = await this.offerService.findOne({
       where: { id },
-      relations: ['item', 'user'],
+      relations: ['wish', 'user'],
     });
 
     return plainToInstance(OfferResponseDto, offer);
