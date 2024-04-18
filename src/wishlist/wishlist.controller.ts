@@ -34,12 +34,12 @@ export class WishlistController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createWishlistDto: CreateWishlistDto, @Req() req: Request & { user: User }) {
-    var { items } = createWishlistDto;
+    var { wishIds } = createWishlistDto;
 
     var wishes =
-      items &&
+      wishIds &&
       (await this.wishService.findMany({
-        where: { id: In(items) },
+        where: { id: In(wishIds) },
       }));
 
     var wishlist = await this.wishlistService.create(createWishlistDto, req.user, wishes);
@@ -50,7 +50,7 @@ export class WishlistController {
   @Get()
   async findAll() {
     var wishlists = await this.wishlistService.findMany({
-      relations: ['owner', 'items'],
+      relations: ['owner', 'wishes'],
     });
 
     return plainToInstance(WishlistResponseDto, wishlists);
@@ -60,7 +60,7 @@ export class WishlistController {
   async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     var wishlist = await this.wishlistService.findOne({
       where: { id },
-      relations: ['owner', 'items'],
+      relations: ['owner', 'wishes'],
     });
 
     return plainToInstance(WishlistResponseDto, wishlist);
@@ -77,19 +77,19 @@ export class WishlistController {
 
     if (!isOwner) throw new ForbiddenException("You can't edit other people's wishlists");
 
-    var { items } = updateWishlistDto;
+    var { wishIds } = updateWishlistDto;
 
     var wishes =
-      items &&
+      wishIds &&
       (await this.wishService.findMany({
-        where: { id: In(items) },
+        where: { id: In(wishIds) },
       }));
 
     await this.wishlistService.updateOne(id, updateWishlistDto, wishes);
 
     var updatedWishlist = await this.wishlistService.findOne({
       where: { id },
-      relations: ['owner', 'items'],
+      relations: ['owner', 'wishes'],
     });
 
     return plainToInstance(WishlistResponseDto, updatedWishlist);

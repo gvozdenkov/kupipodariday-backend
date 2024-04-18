@@ -69,7 +69,7 @@ export class Wish extends AbstractEntity {
   })
   offers: Offer[];
 
-  @ManyToMany(() => Wishlist, (wishlist) => wishlist.items)
+  @ManyToMany(() => Wishlist, (wishlist) => wishlist.wishes)
   @JoinTable()
   wishlists: Wishlist[];
 }

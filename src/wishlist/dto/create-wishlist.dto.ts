@@ -6,5 +6,5 @@ export class CreateWishlistDto extends PickType(Wishlist, ['name', 'description'
   @IsOptional()
   @IsArray()
   @IsUUID('all', { each: true })
-  items: string[];
+  wishIds: string[];
 }

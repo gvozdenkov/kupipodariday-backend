@@ -30,7 +30,7 @@ export class WishlistResponseDto extends PickType(Wishlist, [
 
   @Type(() => WishOwnResponseDto)
   @Expose()
-  items: WishOwnResponseDto[];
+  wishes: WishOwnResponseDto[];
 
   @Expose()
   createdAt: Date;

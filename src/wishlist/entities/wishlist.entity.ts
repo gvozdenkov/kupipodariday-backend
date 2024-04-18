@@ -25,7 +25,7 @@ export class Wishlist extends AbstractEntity {
 
   // Wish located in many Wishlists, Each Wishlist contains many Wises
   @ManyToMany(() => Wish, (wish) => wish.wishlists, { onUpdate: 'CASCADE' })
-  items: Wish[];
+  wishes: Wish[];
 
   // Many WishList can belong to unique user
   @ManyToOne(() => User, (user) => user.wishlists)
