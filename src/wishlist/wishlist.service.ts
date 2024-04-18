@@ -26,7 +26,7 @@ export class WishlistService {
       cover,
       name,
       owner: user,
-      items: wishes || [],
+      wishes: wishes || [],
     });
 
     return await this.wishListRepository.save(newWishlist);
@@ -47,7 +47,7 @@ export class WishlistService {
   async updateOne(id: string, updateWishlistDto: UpdateWishlistDto, wishes: Wish[]) {
     var wishlist = await this.findOne({
       where: { id },
-      relations: ['items'],
+      relations: ['wishes'],
     });
 
     var updatedWishlist = {
@@ -55,7 +55,7 @@ export class WishlistService {
       name: updateWishlistDto.name || wishlist.name,
       description: updateWishlistDto.description || wishlist.description,
       cover: updateWishlistDto.cover || wishlist.cover,
-      items: wishes || wishlist.items,
+      wishes: wishes || wishlist.wishes,
     };
 
     return await this.wishListRepository.save(updatedWishlist);
@@ -64,7 +64,7 @@ export class WishlistService {
   async removeOne(id: string) {
     var wishlist = await this.findOne({
       where: { id },
-      relations: ['owner', 'items'],
+      relations: ['owner', 'wishes'],
     });
 
     return await this.wishListRepository.remove(wishlist);

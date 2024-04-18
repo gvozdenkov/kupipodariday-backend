@@ -865,7 +865,7 @@ components:
       required:
         - id
         - name
-        - items
+        - wishes
         - owner
         - createdAt
         - updatedAt
@@ -892,7 +892,7 @@ components:
           type: string
         owner:
           $ref: '#/components/schemas/UserPublicProfileResponseDto'
-        items:
+        wishes:
           type: array
           items:
             $ref: '#/components/schemas/WishPartial'
@@ -1085,7 +1085,7 @@ components:
         cover:
           type: string
           example: https://placehold.jp/b0b0b0/ffffff/200x200.png?text=New%20Wishlist
-        items:
+        wishes:
           type: array
           items:
             type: string
@@ -1099,7 +1099,7 @@ components:
         cover:
           type: string
           example: https://placehold.jp/b0b0b0/ffffff/200x200.png?text=Updated%20Wishlist
-        items:
+        wishes:
           type: array
           items:
             type: string
