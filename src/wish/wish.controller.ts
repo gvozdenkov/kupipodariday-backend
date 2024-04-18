@@ -9,7 +9,6 @@ import {
   ParseUUIDPipe,
   UseGuards,
   Req,
-  ForbiddenException,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { JwtAuthGuard } from '#auth/guard/jwt-auth.guard';
@@ -86,11 +85,7 @@ export class WishController {
     @Body() updateWishDto: UpdateWishDto,
     @Req() req: Request & { user: User },
   ) {
-    var isOwner = await this.wishService.isOwner(id, req.user.id);
-
-    if (!isOwner) throw new ForbiddenException("You can't edit other people's wishes");
-
-    var updatedWish = await this.wishService.update(id, updateWishDto);
+    var updatedWish = await this.wishService.update(id, updateWishDto, req.user.id);
 
     return plainToInstance(WishResponseDto, updatedWish);
   }
@@ -101,11 +96,7 @@ export class WishController {
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Req() req: Request & { user: User },
   ) {
-    var isOwner = await this.wishService.isOwner(id, req.user.id);
-
-    if (!isOwner) throw new ForbiddenException("You can't delete other people's wishes");
-
-    var removedWish = await this.wishService.removeOne(id);
+    var removedWish = await this.wishService.removeOne(id, req.user.id);
 
     return plainToInstance(WishResponseDto, removedWish);
   }
@@ -116,21 +107,7 @@ export class WishController {
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Req() req: Request & { user: User },
   ) {
-    var isOwner = await this.wishService.isOwner(id, req.user.id);
-
-    if (isOwner) throw new ForbiddenException("You can't copy your own wishe");
-
-    var wish = await this.wishService.findOne({ where: { id } });
-
-    await this.wishService.updateCopied(wish);
-
-    await this.wishService.create(req.user, {
-      name: wish.name,
-      link: wish.link,
-      image: wish.image,
-      price: wish.price,
-      description: wish.description,
-    });
+    await this.wishService.copyWish(id, req.user);
 
     return {};
   }

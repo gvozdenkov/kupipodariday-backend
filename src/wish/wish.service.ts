@@ -36,7 +36,11 @@ export class WishService {
     return (await this.wishRepository.find(query)) || [];
   }
 
-  async update(id: string, updateWishDto: UpdateWishDto) {
+  async update(id: string, updateWishDto: UpdateWishDto, userId: string) {
+    var isOwner = await this.isOwner(id, userId);
+
+    if (!isOwner) throw new ForbiddenException("You can't edit other people's wishes");
+
     var wish = await this.findOne({ where: { id } });
 
     var isHasOffers = wish.raised !== 0;
@@ -80,13 +84,35 @@ export class WishService {
     });
   }
 
-  async removeOne(id: string) {
+  async removeOne(id: string, userId: string) {
+    var isOwner = await this.isOwner(id, userId);
+
+    if (!isOwner) throw new ForbiddenException("You can't delete other people's wishes");
+
     var wish = await this.findOne({
       where: { id },
       relations: ['owner', 'offers', 'wishlists'],
     });
 
     return await this.wishRepository.remove(wish);
+  }
+
+  async copyWish(wishId: string, user: User) {
+    var isOwner = await this.isOwner(wishId, user.id);
+
+    if (isOwner) throw new ForbiddenException("You can't copy your own wishe");
+
+    var wish = await this.findOne({ where: { id: wishId } });
+
+    await this.updateCopied(wish);
+
+    await this.create(user, {
+      name: wish.name,
+      link: wish.link,
+      image: wish.image,
+      price: wish.price,
+      description: wish.description,
+    });
   }
 
   // helpers
