@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { User } from '#users/entities/user.entity';
-import { Wish } from '#wish/entities/wish.entity';
+import { WishService } from '#wish/wish.service';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { Offer } from './entities/offer.entity';
 
@@ -11,14 +11,23 @@ export class OfferService {
   constructor(
     @InjectRepository(Offer)
     private readonly offerRepository: Repository<Offer>,
+    private readonly wishService: WishService,
   ) {}
 
-  async create(createOfferDto: CreateOfferDto, user: User, wish: Wish) {
-    var { amount, hidden } = createOfferDto;
+  async create(createOfferDto: CreateOfferDto, user: User) {
+    var { wishId, amount, hidden } = createOfferDto;
+
+    var isOwner = await this.wishService.isOwner(wishId, user.id);
+
+    if (isOwner) throw new ForbiddenException("You can't create an offer for your wish");
+
+    await this.wishService.updateRaised(wishId, amount);
+
+    var updatedWish = await this.wishService.findOne({ where: { id: wishId } });
 
     return await this.offerRepository.save({
       user,
-      wish,
+      wish: updatedWish,
       amount,
       hidden,
     });

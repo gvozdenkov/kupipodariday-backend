@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  ParseUUIDPipe,
-  UseGuards,
-  Req,
-  ForbiddenException,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, ParseUUIDPipe, UseGuards, Req } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { User } from '#users/entities/user.entity';
 import { JwtAuthGuard } from '#auth/guard/jwt-auth.guard';
@@ -30,19 +20,9 @@ export class OfferController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createOfferDto: CreateOfferDto, @Req() req: Request & { user: User }) {
-    var { wishId, amount } = createOfferDto;
+    var offer = await this.offerService.create(createOfferDto, req.user);
 
-    var isOwner = await this.wishService.isOwner(wishId, req.user.id);
-
-    if (isOwner) throw new ForbiddenException("You can't create an offer for your wish");
-
-    this.wishService.updateRaised(wishId, amount);
-
-    var updatedWish = await this.wishService.findOne({ where: { id: wishId } });
-
-    await this.offerService.create(createOfferDto, req.user, updatedWish);
-
-    return {};
+    return plainToInstance(OfferResponseDto, offer);
   }
 
   @UseGuards(JwtAuthGuard)
