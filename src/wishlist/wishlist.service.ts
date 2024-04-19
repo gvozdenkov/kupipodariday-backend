@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
-import { Wish } from '#wish/entities/wish.entity';
+import { FindManyOptions, FindOneOptions, In, Repository } from 'typeorm';
+import { WishService } from '#wish/wish.service';
 import { User } from '#users/entities/user.entity';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
@@ -12,20 +12,27 @@ export class WishlistService {
   constructor(
     @InjectRepository(Wishlist)
     private readonly wishListRepository: Repository<Wishlist>,
+    private readonly wishService: WishService,
   ) {}
 
-  async create(createWishlistDto: CreateWishlistDto, user: User, wishes?: Wish[]) {
-    var cover =
-      createWishlistDto.cover ||
-      `https://placehold.jp/b0b0b0/ffffff/200x200.png?text=New%20Wishlist`;
+  async create(createWishlistDto: CreateWishlistDto, owner: User) {
+    var { name: dtoName, cover: dtoCover, wishIds } = createWishlistDto;
 
-    var name = createWishlistDto.name || 'New Wishlist';
+    var cover = dtoCover || `https://placehold.jp/b0b0b0/ffffff/200x200.png?text=New%20Wishlist`;
+
+    var name = dtoName || 'New Wishlist';
+
+    var wishes =
+      wishIds?.length &&
+      (await this.wishService.findMany({
+        where: { id: In(wishIds) },
+      }));
 
     var newWishlist = this.wishListRepository.create({
       ...createWishlistDto,
       cover,
       name,
-      owner: user,
+      owner,
       wishes: wishes || [],
     });
 
@@ -44,24 +51,38 @@ export class WishlistService {
     return (await this.wishListRepository.find(query)) || [];
   }
 
-  async updateOne(id: string, updateWishlistDto: UpdateWishlistDto, wishes: Wish[]) {
+  async updateOne(id: string, updateWishlistDto: UpdateWishlistDto, userId: string) {
+    var isOwner = await this.isOwner(id, userId);
+
+    if (!isOwner) throw new ForbiddenException("You can't edit other people's wishlists");
+
+    var { name, description, cover, wishIds } = updateWishlistDto;
+
     var wishlist = await this.findOne({
       where: { id },
-      relations: ['wishes'],
+      relations: ['wishes', 'owner'],
     });
 
-    var updatedWishlist = {
-      ...wishlist,
-      name: updateWishlistDto.name || wishlist.name,
-      description: updateWishlistDto.description || wishlist.description,
-      cover: updateWishlistDto.cover || wishlist.cover,
-      wishes: wishes || wishlist.wishes,
-    };
+    var wishes =
+      wishIds?.length &&
+      (await this.wishService.findMany({
+        where: { id: In(wishIds) },
+      }));
 
-    return await this.wishListRepository.save(updatedWishlist);
+    return await this.wishListRepository.save({
+      ...wishlist,
+      name: name || wishlist.name,
+      description: description || wishlist.description,
+      cover: cover || wishlist.cover,
+      wishes: wishes || wishlist.wishes,
+    });
   }
 
-  async removeOne(id: string) {
+  async removeOne(id: string, ownerId: string) {
+    var isOwner = await this.isOwner(id, ownerId);
+
+    if (!isOwner) throw new ForbiddenException("You can't delete other people's wishlists");
+
     var wishlist = await this.findOne({
       where: { id },
       relations: ['owner', 'wishes'],
