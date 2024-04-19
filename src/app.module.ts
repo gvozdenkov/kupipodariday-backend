@@ -23,21 +23,13 @@ import { OfferController } from '#offer/offer.controller';
 // Auth
 import { AuthModule } from '#auth/auth.module';
 // App
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { AppConfigModule } from './config/config.module';
 import { HelperModule } from './helper/helper.module';
 
 @Module({
-  controllers: [
-    AppController,
-    UsersController,
-    WishlistController,
-    WishController,
-    OfferController,
-  ],
-  providers: [AppService, UsersService, WishlistService, WishService, OfferService],
+  controllers: [UsersController, WishlistController, WishController, OfferController],
+  providers: [UsersService, WishlistService, WishService, OfferService],
   imports: [
     AppConfigModule,
     DatabaseModule,
